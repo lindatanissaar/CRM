@@ -19,9 +19,29 @@
     <!-- Site core CSS -->
     <link href="assets/css/main.css?<?=COMMIT_HASH?>" rel="stylesheet">
 
+    <!-- Pikaday CSS -->
+
+    <link href="node_modules/pikaday/css/pikaday.css" rel="stylesheet">
+
     <style>
         body {
             padding-top: 70px;
+        }
+
+        img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            padding:4px;
+        }
+
+        #user-name, #user-picture {
+            display: inline-block;
+        }
+
+
+        .nav.navbar-nav {
+            padding-top: 18px;
         }
 
     </style>
@@ -42,7 +62,7 @@
 <body>
 
 <!-- Fixed navbar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -61,18 +81,22 @@
                 <li <?= $controller == 'statistics' ? 'class="active"' : '' ?>><a href="statistics">Statistika</a></li>
 
             </ul>
+
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?= $auth->name ?> <b class="caret"></b></a>
+                    <div class="user-account">
+                            <img id="user-picture" src="assets/img/logo_Linda.jpg" />
+                            <a id="user-name" href="#" class="dropdown-toggle account-section" data-toggle="dropdown"><?= $auth->name ?> <b class="caret"></b></a>
+                    </div>
                     <ul class="dropdown-menu">
-                        <li><a href="#"><? __('Action') ?></a></li>
-                        <li><a href="#">Lisa tegevus</a></li>
-                        <li><a href="#">Lisa tehing</a></li>
-                        <li><a href="#">Lisa vastutaja</a></li>
-                        <li><a href="#">Lisa tegevuse nimetus</a></li>
-                        <li><a href="#">Vaata kõiki tehinguid</a></li>
-                        <li class="divider"></li>
-                        <li><a href="logout">Logi välja</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><? __('Action') ?></a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa tegevus</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa tehing</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa vastutaja</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa tegevuse nimetus</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Vaata kõiki tehinguid</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="logout">Logi välja</a></li>
                     </ul>
                 </li>
             </ul>
