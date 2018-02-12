@@ -9,7 +9,7 @@ class projects extends Controller
         $this->projects = get_all("SELECT * FROM projects");
         $this->organisations = get_all("SELECT * FROM organisation");
         $this->contact_persons = get_all("SELECT * FROM contact_person");
-        $this->transactions = get_all("SELECT * FROM transaction, organisation, contact_person WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID");
+        $this->transactions = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID");
     }
 
     function view()
@@ -48,5 +48,15 @@ class projects extends Controller
 
         }
     }
+
+    function AJAX_deleteTableRow(){
+        if(isset($_POST["transaction_id"])){
+            q("DELETE FROM transaction WHERE ID = '" . $_POST["transaction_id"] . "'");
+
+            exit("success");
+
+        }
+    }
+
 }
 

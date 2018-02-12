@@ -119,19 +119,52 @@
         padding-left:30px;
     }
 
+    .row {
+        margin-top: 30px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 
 
+    .column-left {
+        display: inline-block;
 
+    }
 
+    .column-right {
+        float: right;
+        display: inline-block;
+
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #displayTunnel, #displayTable {
+        margin-left: 20px;
+    }
 </style>
 
+
+
 <div class="row">
-    <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal" data-keyboard="true"
-            data-target="#myModal">Lisa tehing
-    </button>
+
+    <div class="column-left">
+        <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal" data-keyboard="true"
+                data-target="#myModal">Lisa tehing
+        </button>
+
+        <a href="salesfunnel"><img src="assets/img/icon-tunnel.png" id="displayTunnel" /></a>
+        <a href="projects"><img src="assets/img/icon-table.png" id="displayTable" /></a>
+    </div>
+
+</div>
+
+<div class="row">
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" role="dialog" data-keyboard="true" tabindex="-1">
+    <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
         <div class="vertical-alignment-helper">
             <div class="modal-lg vertical-align-center">
                 <!-- Modal content-->
@@ -220,8 +253,6 @@
                                     <input type="text" class="form-control input-sm" id="telephone" placeholder="">
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -254,13 +285,15 @@
             <th>Tähtaeg</th>
             <th>Staatus</th>
             <th>Märkused</th>
+            <th>        <a><img id="changeTableColumns" src="assets/img/icon-add.png" /></a>
+            </th>
         </tr>
         </thead>
 
         <tbody>
 
         <?php foreach ($transactions as $transaction): ?>
-            <tr>
+            <tr id="<?= $transaction['ID'] ?>">
                 <td contenteditable><?= $transaction['NAME'] ?></td>
                 <td contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
                 <td contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
@@ -270,6 +303,10 @@
                 <td contenteditable><?= date("d-m-Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
                 <td contenteditable><?= $transaction['STATUS'] ?></td>
                 <td contenteditable><?= $transaction['NOTE'] ?></td>
+                <td>
+                    <a class="editTableRow"><img src="assets/img/icon-edit.png"/></a>
+                    <a class="deleteTableRow"><img src="assets/img/icon-delete.png"/></a>
+                </td>
             </tr>
         <?php endforeach; ?>
 
@@ -279,21 +316,21 @@
 
 </div>
 
-<script src="node_modules/moment/moment.js"></script>
-<script src="node_modules/pikaday/pikaday.js"></script>
-<script>
+    <script src="node_modules/moment/moment.js"></script>
+    <script src="node_modules/pikaday/pikaday.js"></script>
+    <script>
 
-    var picker = new Pikaday(
-        {
-            field: document.getElementById('datepicker'),
-            firstDay: 1,
-            minDate: new Date(),
-            maxDate: new Date(2020, 12, 31),
-            yearRange: [2000, 2050],
-            format: 'DD/MM/YYYY'
-        });
+        var picker = new Pikaday(
+            {
+                field: document.getElementById('datepicker'),
+                firstDay: 1,
+                minDate: new Date(),
+                maxDate: new Date(2020, 12, 31),
+                yearRange: [2000, 2050],
+                format: 'DD/MM/YYYY'
+            });
 
-</script>
+    </script>
 
 
 
@@ -325,9 +362,15 @@
                 // if response from users/addingAdmins is successful, write "Uus kasutaja on lisatud", otherwise alert error
                 if (data == "success") {
                     $('#addTransactionSuccess').modal('show');
+                    $('body').click(function(){
+                        location.reload();
+                    })
 
                 } else {
                     $('#addTransactionError').modal('show');
+                    $('body').click(function(){
+                        location.reload();
+                    })
                 }
             });
         })
@@ -361,16 +404,53 @@
 
                     $(':input').val('');
 
+                    $('body').click(function(){
+                        location.reload();
+                    })
+
 
                 } else {
                     $('#addTransactionError').modal('show');
                     $(':input').val('');
+                    $('body').click(function(){
+                        location.reload();
+                    })
                 }
             });
         })
 
 
     </script>
+
+
+<script>
+
+    $(".deleteTableRow").click(function () {
+        var transaction_id = $(this).parent().parent().attr('id');
+
+        // make $.post query
+        $.post("projects/deleteTableRow", {
+            transaction_id: transaction_id
+        }).done(function (data) {
+            if (data == "success") {
+                console.log("korras");
+                $('#deleteTransactionSuccess').modal('show');
+                $('body').click(function(){
+                    location.reload();
+                })
+
+
+            } else {
+                console.log("pole korras");
+                $('body').click(function(){
+                    location.reload();
+                })
+
+            }
+        });
+    })
+
+</script>
 
 <script>
 
@@ -412,7 +492,6 @@
 
 </script>
 
-
 <div class="modal fade" tabindex="-1" role="dialog" id="addTransactionSuccess" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -422,6 +501,109 @@
                 <H2>Salvestatud!</H2>
                 <h4>Sisestatud tehing on salvestatud.</h4>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteTransactionSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body" id="deleteTransactionSuccessBody">
+
+                <H2>Kustutatud!</H2>
+                <h4>Sisestatud tehing on salvestatud.</h4>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#changeTableColumns").click(function(){
+        $('#changeTableColumnsModal').modal('show');
+    })
+
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="changeTableColumnsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Muuda välju</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionName" checked>
+                    <label class="form-check-label" for="transactionName">
+                        Nimetus
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionPrice" checked>
+                    <label class="form-check-label" for="transactionPrice">
+                        Väärtus
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionCompany" checked>
+                    <label class="form-check-label" for="transactionCompany">
+                        Ettevõte
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionContactPerson" checked>
+                    <label class="form-check-label" for="transactionContactPerson">
+                        Kontaktisik
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionEmail" checked>
+                    <label class="form-check-label" for="transactionEmail">
+                        Email
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionTelephone" checked>
+                    <label class="form-check-label" for="defaultCheck1">
+                        Telefon
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionDate" checked>
+                    <label class="form-check-label" for="transactionDate">
+                        Tähtaeg
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionStatus" checked>
+                    <label class="form-check-label" for="transactionStatus">
+                        Staatus
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transactionNote" checked>
+                    <label class="form-check-label" for="transactionNote">
+                        Märkused
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="changeTableColumnsId" type="button" class="btn btn-success" data-dismiss="modal" checked>
+                    Salvesta
+                </button>
             </div>
         </div>
     </div>

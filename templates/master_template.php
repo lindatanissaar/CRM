@@ -28,7 +28,7 @@
             padding-top: 70px;
         }
 
-        img {
+        #user-picture {
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -43,6 +43,7 @@
         .nav.navbar-nav {
             padding-top: 18px;
         }
+
 
     </style>
 
@@ -121,8 +122,10 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+
 <script src="vendor/components/bootstrap/js/bootstrap.min.js?<?=COMMIT_HASH?>"></script>
 <script src="vendor/components/jqueryui/jquery-ui.min.js?<?=COMMIT_HASH?>"></script>
+
 <script src="assets/js/main.js?<?=COMMIT_HASH?>"></script>
 </body>
 </html>
