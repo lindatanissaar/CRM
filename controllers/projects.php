@@ -58,5 +58,14 @@ class projects extends Controller
         }
     }
 
+    function AJAX_editTableRow(){
+        if(isset($_POST["transaction_id"])){
+
+            $transaction_id = $_POST["transaction_id"];
+
+            $transactions2 = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ID = '{$transaction_id}' AND transaction.ORGANISATION_ID = organisation.ID AND transaction.CONTACT_PERSON_ID = contact_person.ID");
+            exit(json_encode($transactions2));
+        }
+    }
 }
 

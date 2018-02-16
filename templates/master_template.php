@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="assets/ico/favicon.png">
+    <link rel="shortcut icon" href="/assets/ico/favicon.png">
 
     <title><?= PROJECT_NAME ?></title>
 
@@ -22,6 +22,10 @@
     <!-- Pikaday CSS -->
 
     <link href="node_modules/pikaday/css/pikaday.css" rel="stylesheet">
+
+
+
+
 
     <style>
         body {
@@ -45,7 +49,53 @@
         }
 
 
+        #myDiv {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url('assets/img/icon-loader.gif') 50% 50% no-repeat rgb(249, 249, 249);
+            opacity: .90;
+        }
+
+        .container {
+            width: 85%;
+        }
+
+        .navbar-default {
+            border: none;
+        }
+
+        .navbar-default .navbar-nav>.active>a {
+            background-color: #f8f8f8;
+            font-weight: bold;
+        }
+
+        .status_won span {
+            background-color: #e5f6d3;
+            padding: 5px 10px 5px 10px;
+            border-radius: 4px;
+        }
+
+        .status_lost span {
+            background-color: #f6ccd1;
+            padding: 5px 10px 5px 10px;
+            border-radius: 4px;
+            color: #dc4d5d;
+        }
+
+        .status_unknown span {
+            background-color: #CDD5D1;
+            padding: 5px 10px 5px 10px;
+            border-radius: 4px;
+        }
+
+
     </style>
+
+
 
 
     <!-- jQuery -->
@@ -61,6 +111,16 @@
 </head>
 
 <body>
+
+<div id = "myDiv"></div>
+
+<script type = "text/javascript">
+    setTimeout(function() {
+        document.getElementById("myDiv").style.display="none";
+    }, 1000);  // 5 seconds
+</script>
+
+
 
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -84,11 +144,12 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
+                <div class="user-account">
+                    <img id="user-picture" src="assets/img/logo_Linda.jpg" />
+                    <a id="user-name" href="#" class="dropdown-toggle account-section" data-toggle="dropdown"><?= $auth->name ?> <b class="caret"></b></a>
+                </div>
                 <li class="dropdown">
-                    <div class="user-account">
-                            <img id="user-picture" src="assets/img/logo_Linda.jpg" />
-                            <a id="user-name" href="#" class="dropdown-toggle account-section" data-toggle="dropdown"><?= $auth->name ?> <b class="caret"></b></a>
-                    </div>
+
                     <ul class="dropdown-menu">
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><? __('Action') ?></a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa tegevus</a></li>
@@ -125,6 +186,11 @@
 
 <script src="vendor/components/bootstrap/js/bootstrap.min.js?<?=COMMIT_HASH?>"></script>
 <script src="vendor/components/jqueryui/jquery-ui.min.js?<?=COMMIT_HASH?>"></script>
+<!-- tablesorter JS -->
+
+<script type="text/javascript" src="assets/js/jquery.tablesorter.min.js"></script>
+
+
 
 <script src="assets/js/main.js?<?=COMMIT_HASH?>"></script>
 </body>

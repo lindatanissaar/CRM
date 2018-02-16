@@ -131,22 +131,188 @@
 
     }
 
-    .column-right {
-        float: right;
-        display: inline-block;
-
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    #displayTunnel, #displayTable {
+    #displayTunnel, #displayTable, #changeTableColumns {
         margin-left: 20px;
     }
+
+
+    /* table sorting CSS*/
+
+    th.header {
+        /*background-image: url('assets/img/bg.png') !important;*/
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: right center;
+        padding-left: 60px;
+        margin-left: -1px;
+        background-size: 18px;
+    }
+
+    th.headerSortUp {
+        background-image: url('assets/img/asc.png') !important;
+        background-color: #eee;
+        background-size: 18px;
+
+    }
+
+     th.headerSortDown {
+        background-image: url('assets/img/desc.png') !important;
+        background-color: #eee;
+         background-size: 18px;
+
+     }
+
+    /* table css*/
+
+    .table {
+        font-family: Verdana;
+    }
+
+    th.header {
+        border-right: 0;
+        color: grey;
+        font-weight: 500;
+    }
+
+    .phone, .date, .price {
+        text-align: right;
+        background-position: left center !important;
+
+    }
+
+    .table>tbody>tr>td {
+        padding: 16px;
+        border-top: 1px solid #eee;
+    }
+
+    .editAndDeleteTable {
+        border-top: 0 !important;
+    }
+
+
+    .table>thead>tr>th {
+        border-bottom: 3px solid #eee;
+        padding: 16px;
+    }
+
+    .table>thead:first-child>tr:first-child>th {
+        border-top: 3px solid #eee;
+
+    }
+
+    .editAndDeleteTable, .date, .phone {
+        width: 10%;
+    }
+
+    .organisation_name, .note {
+        width: 15%;
+    }
+
+
+
+    .editTableRow {
+        -webkit-filter: grayscale(100%);
+        opacity: 0.5;
+    }
+
+    .editTableRow:hover {
+        -webkit-filter: grayscale(0%);
+        opacity: 1;
+
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+    }
+
+    .deleteTableRow {
+        -webkit-filter: grayscale(100%);
+        opacity: 0.5;
+    }
+
+    .deleteTableRow:hover {
+        -webkit-filter: grayscale(0%);
+        opacity: 1;
+
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+    }
+
+
+
+
+
+
+
 </style>
 
+<script>
+    $(function () {
+        // Here we select for <table> elements universally,
+        // but you can definitely fine tune your selector
+        $('table').each(function () {
+            if($(this).find('thead').length > 0 && $(this).find('th').length > 0) {
+                // Rest of our script goes here
+                var $t     = $(this),
+                    $w     = $(window),
+                    $thead = $(this).find('thead').clone(),
+                    $col   = $(this).find('thead, tbody').clone();
+            }
+        });
+    });
 
+</script>
+
+
+
+
+<script>
+
+
+    $(document).ready(function(){
+        $( ".status" ).each(function() {
+            if($(this).text()== "STATUS_WON"){
+                $(this).removeClass("status_won");
+                $(this).removeClass("status_lost");
+                $(this).removeClass("status_unknown");
+                $( this ).addClass( "status_won" );
+            }
+
+            if($(this).text()== "STATUS_LOST"){
+                $(this).removeClass("status_won");
+                $(this).removeClass("status_lost");
+                $(this).removeClass("status_unknown");
+                $( this ).addClass( "status_lost" );
+            }
+
+            if($(this).text()== "STATUS_UNKNOWN"){
+                $(this).removeClass("status_won");
+                $(this).removeClass("status_lost");
+                $(this).removeClass("status_unknown");
+                $( this ).addClass( "status_unknown" );
+            }
+
+        });
+    });
+
+
+</script>
+<div class="row">
+
+    <div class="loader"></div>
+
+</div>
+
+
+<script>
+    $( function() {
+        $( document ).tooltip();
+    } );
+</script>
 
 <div class="row">
 
@@ -155,8 +321,9 @@
                 data-target="#myModal">Lisa tehing
         </button>
 
-        <a href="salesfunnel"><img src="assets/img/icon-tunnel.png" id="displayTunnel" /></a>
-        <a href="projects"><img src="assets/img/icon-table.png" id="displayTable" /></a>
+        <a title="Müügitunnel" href="salesfunnel"><img src="assets/img/icon-tunnel.png" id="displayTunnel" /></a>
+        <a title="Projektide tabel" href="projects"><img src="assets/img/icon-table.png" id="displayTable" /></a>
+        <a title="Muuda tabeli veerge"><img id="changeTableColumns" src="assets/img/icon-add.png" /></a>
     </div>
 
 </div>
@@ -270,23 +437,30 @@
 
 <!-- Table -->
 
+<script>
+    $(document).ready(function()
+        {
+            $("#transactionsTable").tablesorter( {dateFormat: 'pt'} );
+        }
+    );
+</script>
+
+
 <div class="table-responsive">
 
-    <table class="table table-striped table-bordered">
+    <table class="table" class="tablesorter" id="transactionsTable">
 
-        <thead>
-        <tr>
+        <thead  class="header" id="tableHeader">
+        <tr title="Sorteeri tabelit veergude järgi">
             <th>Nimetus</th>
-            <th>Väärtus</th>
+            <th class="price">Väärtus</th>
             <th>Ettevõte</th>
             <th>Kontaktisik</th>
             <th>E-mail</th>
-            <th>Telefon</th>
-            <th>Tähtaeg</th>
+            <th class="phone">Telefon</th>
+            <th class="date">Tähtaeg</th>
             <th>Staatus</th>
             <th>Märkused</th>
-            <th>        <a><img id="changeTableColumns" src="assets/img/icon-add.png" /></a>
-            </th>
         </tr>
         </thead>
 
@@ -294,18 +468,18 @@
 
         <?php foreach ($transactions as $transaction): ?>
             <tr id="<?= $transaction['ID'] ?>">
-                <td contenteditable><?= $transaction['NAME'] ?></td>
-                <td contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
-                <td contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
-                <td contenteditable><?= $transaction['CONTACT_PERSON_NAME'] ?></td>
-                <td contenteditable><?= $transaction['EMAIL'] ?></td>
-                <td contenteditable><?= $transaction['PHONE'] ?></td>
-                <td contenteditable><?= date("d-m-Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
-                <td contenteditable><?= $transaction['STATUS'] ?></td>
-                <td contenteditable><?= $transaction['NOTE'] ?></td>
-                <td>
-                    <a class="editTableRow"><img src="assets/img/icon-edit.png"/></a>
-                    <a class="deleteTableRow"><img src="assets/img/icon-delete.png"/></a>
+                <td class="transaction_name" contenteditable><?= $transaction['NAME'] ?></td>
+                <td class="price" contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
+                <td class="organisation_name" contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
+                <td class="contact_person_name" contenteditable><?= $transaction['CONTACT_PERSON_NAME'] ?></td>
+                <td class="email" contenteditable><?= $transaction['EMAIL'] ?></td>
+                <td class="phone" contenteditable><?= $transaction['PHONE'] ?></td>
+                <td class="date" contenteditable><?= date("d-m-Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
+                <td class="status" contenteditable><span><?= $transaction['STATUS'] ?></span></td>
+                <td class="note" contenteditable><?= $transaction['NOTE'] ?></td>
+                <td class="editAndDeleteTable">
+                    <a title="Tehingu hulgimuutmine" class="editTableRow"><img src="assets/img/icon-edit.png"/></a>
+                    <a title="Kogu tehingu kustutamine" class="deleteTableRow"><img src="assets/img/icon-delete.png"/></a>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -313,6 +487,7 @@
         </tbody>
 
     </table>
+
 
 </div>
 
@@ -361,21 +536,26 @@
             }).done(function (data) {
                 // if response from users/addingAdmins is successful, write "Uus kasutaja on lisatud", otherwise alert error
                 if (data == "success") {
+                    location.reload();
+
                     $('#addTransactionSuccess').modal('show');
-                    $('body').click(function(){
-                        location.reload();
-                    })
+
 
                 } else {
+                    location.reload();
+
                     $('#addTransactionError').modal('show');
-                    $('body').click(function(){
-                        location.reload();
-                    })
+
                 }
             });
         })
 
-        $("#saveAndAddNew").click(function () {
+
+
+
+
+
+$("#saveAndAddNew").click(function () {
             var name = $("#name").val();
             var price = $("#price").val();
             var organisation_name = $("#organisationNameId").val();
@@ -445,10 +625,32 @@
                 $('body').click(function(){
                     location.reload();
                 })
-
             }
         });
-    })
+    });
+
+    // edit table row
+
+
+
+    $(".editTableRow").click(function () {
+        var transaction_id = $(this).parent().parent().attr('id');
+        $.post("projects/editTableRow", {
+            transaction_id: transaction_id
+        }).done(function (data) {
+            if (data) {
+                data = JSON.parse(data);
+                console.log(data[0]);
+                $("#name").text(data[0].NAME);
+            } else {
+
+                console.log("pole korras");
+            }
+
+            $('#editTableRowModal').modal('show');
+
+        })
+    });
 
 </script>
 
@@ -485,8 +687,7 @@
 <script>
 
     $('select[id$=-status][id^=id_item-]').change(function () {
-        var color = $(this).find('option:selected').val();
-
+        //var color = $(this).find('option:selected').val();
         $(this).removeClass('STATUS_UNKNOWN STATUS_WON STATUS_LOST').addClass($(this).find('option:selected').val());
     }).change();
 
@@ -498,7 +699,7 @@
 
             <div class="modal-body" id="addTransactionSuccessBody">
 
-                <H2>Salvestatud!</H2>
+                <h2>Salvestatud!</h2>
                 <h4>Sisestatud tehing on salvestatud.</h4>
 
             </div>
@@ -509,16 +710,14 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="deleteTransactionSuccess" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-
             <div class="modal-body" id="deleteTransactionSuccessBody">
-
                 <H2>Kustutatud!</H2>
                 <h4>Sisestatud tehing on salvestatud.</h4>
-
             </div>
         </div>
     </div>
 </div>
+
 
 <script>
 
@@ -608,6 +807,115 @@
         </div>
     </div>
 </div>
+
+<!-- editTableRowModal -->
+
+<div class="modal fade" id="editTableRowModal" role="dialog" tabindex="-1">
+    <div class="vertical-alignment-helper">
+        <div class="modal-lg vertical-align-center">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Muuda tehingut</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body row">
+                        <div class="col-lg-8">
+                            <div class="col-lg-12">
+                                <div class="form-group col-lg-8">
+                                    <input id="name" placeholder="Tehingu nimetus" class="form-control input-lg">
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-12">
+                                <div class="form-group col-lg-4">
+                                    <label for="price">Hind:</label>
+                                    <input type="text" class="form-control input-sm" id="price" placeholder="" value="<?= $transactions2['ID'] ?>">
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <label for="datepicker">Tähtaeg:</label>
+                                    <input type="text" class="form-control input-sm" id="datepicker" placeholder="">
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <label for="status">Staatus:</label>
+
+                                    <div class="form-group">
+                                        <select name="item-0-status" id="id_item-0-status"
+                                                class="form-control input-sm">
+                                            <option value="STATUS_UNKNOWN">Pole teada</option>
+                                            <option value="STATUS_WON">Võidetud</option>
+                                            <option value="STATUS_LOST">Kaotatud</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group col-lg-10">
+                                    <label for="note">Märkus:</label>
+                                    <textarea class="form-control" rows="6" id="note"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <h4>Seosed</h4>
+                            <hr>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Seosta ettevõttega"
+                                       id="organisationNameId" list="organisation_name">
+                                <datalist id="organisation_name">
+                                    <?php foreach ($organisations as $organisation): ?>
+                                        <option id="<?= $organisation['ID'] ?>"><?= $organisation['ORGANISATION_NAME'] ?></option>
+                                    <?php endforeach; ?>
+                                </datalist>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Seosta isikuga"
+                                       id="contactPersonNameId" list="contact_person_name">
+                                <datalist id="contact_person_name">
+                                    <?php foreach ($contact_persons as $contact_person): ?>
+                                        <option id="<?= $contact_person['ID'] ?>"><?= $contact_person['CONTACT_PERSON_NAME'] ?></option>
+                                    <?php endforeach; ?>
+                                </datalist>
+                            </div>
+
+                            <h4>Kontaktandmed</h4>
+                            <hr>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="text" class="form-control input-sm" id="email" placeholder="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telephone">Telefon:</label>
+                                <input type="text" class="form-control input-sm" id="telephone" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="addTransaction" type="button" class="btn btn-success" data-dismiss="modal">
+                        Muuda
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 
 
 

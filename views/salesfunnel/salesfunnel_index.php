@@ -204,6 +204,12 @@
         margin-left: 20px;
     }
 
+    .container {
+        /*margin-left: 100px;
+        margin-right: 100px;*/
+        width: 100% !important;
+    }
+
 
 </style>
 
