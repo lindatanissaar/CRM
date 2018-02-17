@@ -243,35 +243,87 @@
     }
 
 
+    .column-right {
+        float: right;
+        display: inline-block;
+    }
+
+    .column-left {
+        display: inline-block;
+    }
 
 
+    /* search transactions*/
 
+    .results tr[visible='false'],
+    .no-result{
+        display:none;
+    }
+
+    .results tr[visible='true']{
+        display:table-row;
+    }
+
+    .counter{
+        padding:8px;
+        color:#ccc;
+        display: inline-block !important;
+    }
+
+    .search {
+        display: inline-block !important;
+        background: url(assets/img/icon-search.png) no-repeat scroll 7px 7px;
+        padding-left:40px;
+        border-radius: 6px !important;
+
+    }
+
+    .table>thead>tr.warning>td {
+        background-color: #f6ccd1;
+        color: #dc4d5d;
+    }
 
 
 </style>
 
+
 <script>
-    $(function () {
-        // Here we select for <table> elements universally,
-        // but you can definitely fine tune your selector
-        $('table').each(function () {
-            if($(this).find('thead').length > 0 && $(this).find('th').length > 0) {
-                // Rest of our script goes here
-                var $t     = $(this),
-                    $w     = $(window),
-                    $thead = $(this).find('thead').clone(),
-                    $col   = $(this).find('thead, tbody').clone();
+    $(document).ready(function() {
+        $(".search").keyup(function () {
+            var searchTerm = $(".search").val();
+            var listItem = $('.results tbody').children('tr');
+            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+            $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+                return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
             }
+            });
+
+            $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+                $(this).attr('visible','false');
+            });
+
+            $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+                $(this).attr('visible','true');
+            });
+
+            var jobCount = $('.results tbody tr[visible="true"]').length;
+
+            if (jobCount == 1){
+                $('.counter').text(jobCount + ' tulemus');
+
+            }else {
+                $('.counter').text(jobCount + ' tulemust');
+
+            }
+
+            if(jobCount == '0') {$('.no-result').show();}
+            else {$('.no-result').hide();}
         });
     });
-
 </script>
 
-
-
-
 <script>
-
 
     $(document).ready(function(){
         $( ".status" ).each(function() {
@@ -307,7 +359,6 @@
 
 </div>
 
-
 <script>
     $( function() {
         $( document ).tooltip();
@@ -324,6 +375,15 @@
         <a title="Müügitunnel" href="salesfunnel"><img src="assets/img/icon-tunnel.png" id="displayTunnel" /></a>
         <a title="Projektide tabel" href="projects"><img src="assets/img/icon-table.png" id="displayTable" /></a>
         <a title="Muuda tabeli veerge"><img id="changeTableColumns" src="assets/img/icon-add.png" /></a>
+    </div>
+
+    <div class="column-right">
+
+        <div class="input-group">
+            <input type="text" class="form-control input-md search" id="searchTransactionInput" onkeyup="searchTable()" placeholder="Otsi">
+        </div>
+        <span class="counter"></span>
+
     </div>
 
 </div>
@@ -443,12 +503,13 @@
             $("#transactionsTable").tablesorter( {dateFormat: 'pt'} );
         }
     );
+
 </script>
 
 
 <div class="table-responsive">
 
-    <table class="table" class="tablesorter" id="transactionsTable">
+    <table class="table tablesorter results"  id="transactionsTable">
 
         <thead  class="header" id="tableHeader">
         <tr title="Sorteeri tabelit veergude järgi">
@@ -462,6 +523,9 @@
             <th>Staatus</th>
             <th>Märkused</th>
         </tr>
+
+        <tr class="warning no-result">
+            <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
         </thead>
 
         <tbody>
