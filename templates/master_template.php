@@ -32,6 +32,57 @@
             padding-top: 70px;
         }
 
+        .container {
+            width: 85%;
+        }
+
+        .nav.navbar-nav {
+            padding-top: 18px;
+        }
+
+        .navbar-default {
+            border: none;
+            background-color: #F0F0F0;
+        }
+
+        .navbar-default .navbar-nav>.active>a {
+            background-color: #F0F0F0;
+            font-weight: bold;
+        }
+
+        #loader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url('assets/img/icon-loader.gif') 50% 50% no-repeat rgb(249, 249, 249);
+            opacity: .90;
+        }
+
+        .row {
+            margin-top: 30px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+
+        .column-right {
+            float: right;
+            display: inline-block;
+        }
+
+        .column-left {
+            display: inline-block;
+        }
+
+        #displayTunnel, #displayTable, #changeTableColumns {
+            margin-left: 20px;
+        }
+
+        /* Kasutaja profiil, nimi, pilt*/
+
         #user-picture {
             width: 60px;
             height: 60px;
@@ -43,35 +94,236 @@
             display: inline-block;
         }
 
+        /* transaction modal*/
 
-        .nav.navbar-nav {
-            padding-top: 18px;
+        /*success (saved) modal*/
+
+        #addTransactionSuccessBody {
+            color: white;
+            background-color: #5cb85c;
         }
 
-
-        #myDiv {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background: url('assets/img/icon-loader.gif') 50% 50% no-repeat rgb(249, 249, 249);
-            opacity: .90;
-        }
-
-        .container {
-            width: 85%;
-        }
-
-        .navbar-default {
-            border: none;
-        }
-
-        .navbar-default .navbar-nav>.active>a {
-            background-color: #f8f8f8;
+        select.input-sm {
+            color: white;
+            line-height: 1.5;
+            padding: 5px 15px;
             font-weight: bold;
+            text-align: center;
         }
+
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+        option {
+            padding: 20px;
+            font-size: 12px;
+        }
+
+        option:hover {
+            background-color: transparent;
+        }
+
+        select option,
+        select {
+            background-color: white;
+            /*color: white;*/
+        }
+
+        select option[value="STATUS_UNKNOWN"],
+        select.STATUS_UNKNOWN {
+            background-color: lightgrey;
+        }
+
+        select option[value="STATUS_WON"],
+        select.STATUS_WON {
+            background-color: #5cb85c;
+
+        }
+
+        select option[value="STATUS_LOST"],
+        select.STATUS_LOST {
+            background-color: red;
+
+        }
+
+        .modal-header {
+            background-color: #e5e5e5;
+        }
+
+        hr {
+            border: 1px solid #8c8b8b;
+            margin-top: 15px;
+        }
+
+        .vertical-alignment-helper {
+            display: table;
+            height: 100%;
+            width: 100%;
+        }
+
+        .vertical-align-center {
+            /* To center vertically */
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .modal-content {
+            /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+            width: inherit;
+            height: inherit;
+            /* To center horizontally */
+            margin: 0 auto;
+        }
+
+        .modal-header {
+            background-color: #eee;
+        }
+
+        .modal-footer {
+            background-color: #F0F0F0;
+        }
+
+        .modal-title {
+            padding-left: 48px;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            text-indent: 1px;
+            text-overflow: '';
+        }
+
+        #organisationNameId {
+            background: url(assets/img/icon-business.png) no-repeat scroll 7px 7px;
+            padding-left:30px;
+        }
+
+        #email {
+            background: url(assets/img/icon-email.png) no-repeat scroll 7px 7px;
+            padding-left:30px;
+        }
+
+        #telephone {
+            background: url(assets/img/icon-telephone.png) no-repeat scroll 7px 7px;
+            padding-left:30px;
+        }
+
+        #contactPersonNameId {
+            background: url(assets/img/icon-contactperson.png) no-repeat scroll 7px 7px;
+            padding-left:30px;
+        }
+
+
+        /*TABLE *>
+        /* table sorting CSS*/
+
+        th.header {
+            /*background-image: url('assets/img/bg.png') !important;*/
+            cursor: pointer;
+            background-repeat: no-repeat;
+            background-position: right center;
+            padding-left: 60px;
+            margin-left: -1px;
+            background-size: 18px;
+        }
+
+        th.headerSortUp {
+            background-image: url('assets/img/asc.png') !important;
+            background-color: #eee;
+            background-size: 18px;
+
+        }
+
+        th.headerSortDown {
+            background-image: url('assets/img/desc.png') !important;
+            background-color: #eee;
+            background-size: 18px;
+
+        }
+
+        /* table css*/
+
+        .table {
+            font-family: Verdana;
+        }
+
+        th.header {
+            border-right: 0;
+            color: grey;
+            font-weight: 500;
+        }
+
+        .phone, .date, .price {
+            text-align: right;
+            background-position: left center !important;
+
+        }
+
+        .table>tbody>tr>td {
+            padding: 16px;
+            border-top: 1px solid #eee;
+        }
+
+        .editAndDeleteTable {
+            border-top: 0 !important;
+        }
+
+
+        .table>thead>tr>th {
+            border-bottom: 3px solid #eee;
+            padding: 16px;
+        }
+
+        .table>thead:first-child>tr:first-child>th {
+            border-top: 3px solid #eee;
+
+        }
+
+        .editAndDeleteTable, .date, .phone {
+            width: 10%;
+        }
+
+        .organisation_name, .note {
+            width: 15%;
+        }
+
+
+        .editTableRow {
+            -webkit-filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        .editTableRow:hover {
+            -webkit-filter: grayscale(0%);
+            opacity: 1;
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+        }
+
+        .deleteTableRow {
+            -webkit-filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        .deleteTableRow:hover {
+            -webkit-filter: grayscale(0%);
+            opacity: 1;
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+        }
+
+
+        /* table statuses*/
 
         .status_won span {
             background-color: #e5f6d3;
@@ -90,6 +342,37 @@
             background-color: #CDD5D1;
             padding: 5px 10px 5px 10px;
             border-radius: 4px;
+        }
+
+
+        /* search transactions*/
+
+        .results tr[visible='false'],
+        .no-result{
+            display:none;
+        }
+
+        .results tr[visible='true']{
+            display:table-row;
+        }
+
+        .counter{
+            padding:8px;
+            color:#ccc;
+            display: inline-block !important;
+        }
+
+        .search {
+            display: inline-block !important;
+            background: url(assets/img/icon-search.png) no-repeat scroll 7px 7px;
+            padding-left:40px;
+            border-radius: 6px !important;
+
+        }
+
+        .table>thead>tr.warning>td {
+            background-color: #f6ccd1;
+            color: #dc4d5d;
         }
 
 
@@ -112,11 +395,12 @@
 
 <body>
 
-<div id = "myDiv"></div>
+
+<div id = "loader"></div>
 
 <script type = "text/javascript">
     setTimeout(function() {
-        document.getElementById("myDiv").style.display="none";
+        document.getElementById("loader").style.display="none";
     }, 1000);  // 5 seconds
 </script>
 
