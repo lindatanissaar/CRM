@@ -11,7 +11,7 @@ class tasks extends Controller
         $this->transactions = get_all("SELECT * FROM transaction WHERE STATUS = 'STATUS_WON'");
         $this->employees = get_all("SELECT * FROM employee");
         $this->activity_descriptions = get_all("SELECT * FROM activity_description");
-        $this->activities = get_all("SELECT * FROM activity, transaction, supervisor, employee, activity_description WHERE activity.TRANSACTION_ID = transaction.ID AND activity.DESCRIPTION_ID = activity_description.ID AND supervisor.EMPLOYEE_ID = employee.ID AND supervisor.ACTIVITY_ID = activity.ID");
+        $this->activities = get_all("SELECT * FROM transaction, supervisor, employee, activity_description, activity WHERE activity.TRANSACTION_ID = transaction.ID AND activity.DESCRIPTION_ID = activity_description.ID AND supervisor.EMPLOYEE_ID = employee.ID AND supervisor.ACTIVITY_ID = activity.ID AND activity.DEL_DATETIME_ACTIVITY IS NULL");
 
     }
 
@@ -29,6 +29,18 @@ class tasks extends Controller
             // uses Transaction class
             Task_Model::addTask($_POST["activityDescription"], $_POST["deadlineDate"], $_POST["transactionName"], $_POST["employeeName"]);
             exit("success");
+        }
+    }
+
+    function AJAX_deleteTableRow(){
+        if(isset($_POST["activity_id"])){
+
+            $activity_id = $_POST["activity_id"];
+
+            q("UPDATE activity SET DEL_DATETIME_ACTIVITY = NOW() WHERE ID = '{$activity_id}'");
+
+            exit("success");
+
         }
     }
 }

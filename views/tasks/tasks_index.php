@@ -493,6 +493,33 @@
 
 </script>
 
+<script>
+    $(".deleteTableRow").click(function () {
+        var activity_id = $(this).parent().parent().attr('id');
+
+        // make $.post query
+        $.post("tasks/deleteTableRow", {
+            activity_id: activity_id
+        }).done(function (data) {
+            if (data == "success") {
+                console.log("korras");
+                location.reload();
+                $('#deleteTransactionSuccess').modal('show');
+                $('body').click(function(){
+                    location.reload();
+                })
+
+
+            } else {
+                console.log("pole korras");
+                $('body').click(function(){
+                    location.reload();
+                })
+            }
+        });
+    });
+</script>
+
 
 
 
