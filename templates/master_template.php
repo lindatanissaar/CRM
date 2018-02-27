@@ -375,6 +375,15 @@
             color: #dc4d5d;
         }
 
+        #filterTableNoResults {
+            float: right;
+            background-color: #5cb85c;
+            display: none;
+            height: 40px;
+            margin: 0;
+            padding: 5px;
+        }
+
 
     </style>
 
@@ -415,7 +424,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><?= PROJECT_NAME ?></a>
+            <a class="navbar-brand" href="#"><img src="assets/img/logo-kodulehekoolitused.png"/></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -452,7 +461,20 @@
     </div>
 </nav>
 
+<div class="row">
+    <div class="column-left"></div>
+    <div class="column-right">
+        <div id="filterTableNoResults">
+            <h4>Tulemused puuduvad</h4>
+        </div>
+    </div>
+</div>
+
 <div class="container">
+
+
+
+
 
     <!-- Main component for a primary marketing message or call to action -->
     <?php if (!file_exists("views/$controller/{$controller}_$action.php")) error_out('The view <i>views/' . $controller . '/' . $controller . '_' . $action . '.php</i> does not exist. Create that file.'); ?>
