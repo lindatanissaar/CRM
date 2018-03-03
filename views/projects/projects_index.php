@@ -5,8 +5,6 @@
         background-color: white;
     }
 
-
-
 </style>
 
 
@@ -70,7 +68,6 @@
                 $(this).removeClass("status_unknown");
                 $( this ).addClass( "status_unknown" );
             }
-
         });
     });
 

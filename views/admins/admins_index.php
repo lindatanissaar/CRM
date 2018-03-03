@@ -178,6 +178,78 @@
 </div>
 
 
+
+
+
+<!-- adminTaskModal -->
+<div id="adminTaskModal" class="modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg"
+                               placeholder="Tegevuse nimetus"
+                               id="activityDescriptionId" list="activity_description">
+                        <datalist id="activity_description">
+                            <?php foreach ($activity_descriptions as $activity_description): ?>
+                                <option id="<?= $activity_description['ID'] ?>"><?= $activity_description['DESCRIPTION'] ?></option>
+                            <?php endforeach; ?>
+                        </datalist>
+                    </div>
+
+                    <label for="datepicker2">Tähtaeg:</label>
+
+                    <input type="text" class="form-control input-sm" id="datepicker2"
+                           placeholder="Tähtaeg">
+                </div>
+
+                <div class="col-lg-6">
+                    <h4>Seosed</h4>
+                    <hr/>
+
+                    <div class="form-group">
+                        <input title="Vali 'Võidetud' tehingute seast" type="text"
+                               class="form-control" placeholder="Seosta tehinguga"
+                               id="transactionNameId" list="transaction_name">
+                        <datalist id="transaction_name">
+                            <?php foreach ($transactions as $transaction): ?>
+                                <option id="<?= $transaction['ID'] ?>"><?= $transaction['NAME'] ?></option>
+                            <?php endforeach; ?>
+                        </datalist>
+                    </div>
+
+                    <h4>Määra vastutaja</h4>
+                    <hr/>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Vastutaja"
+                               id="employeeId" list="employeeName">
+                        <datalist id="employeeName">
+                            <?php foreach ($employees as $employee): ?>
+                                <option id="<?= $employee['ID'] ?>"><?= $employee['FIRST_NAME'] . " " . $employee['LAST_NAME'] ?></option>
+                            <?php endforeach; ?>
+                        </datalist>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="addTask" type="button" class="btn btn-success" data-dismiss="modal">
+                    Salvesta
+                </button>
+                <button id="saveTaskAndAddNew" type="button" class="btn btn-basic">Salvesta ja lisa
+                    uus
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <script src="node_modules/moment/moment.js"></script>
 <script src="node_modules/pikaday/pikaday.js"></script>
 <script>
@@ -192,24 +264,17 @@
             format: 'DD/MM/YYYY'
         });
 
+    var picker2 = new Pikaday(
+        {
+            field: document.getElementById('datepicker2'),
+            firstDay: 1,
+            minDate: new Date(),
+            maxDate: new Date(2020, 12, 31),
+            yearRange: [2000, 2050],
+            format: 'DD/MM/YYYY'
+        });
+
 </script>
-
-
-<!-- adminTaskModal -->
-<div id="adminTaskModal" class="modal" role="dialog">
-    <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-body">
-                <p>Some text in the modal.</p>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-
-    </div>
-</div>
 
 
 <!-- adminTaskNameModal -->
@@ -311,6 +376,64 @@
 
 
 </script>
+
+<!-- addTask -->
+
+<script>
+    $("#addTask").click(function () {
+        var activityDescription = $("#activityDescriptionId").val();
+
+        var deadlineDate = picker2.toString();
+
+        var transactionName = $("#transactionNameId").val();
+
+        var employeeName = $("#employeeId").val();
+
+
+        // make $.post query
+        $.post("tasks/addTask", {
+            activityDescription: activityDescription,
+            deadlineDate: deadlineDate,
+            transactionName: transactionName,
+            employeeName: employeeName
+        }).done(function (data) {
+            // if response from users/addingAdmins is successful, write "Uus kasutaja on lisatud", otherwise alert error
+            if (data == "success") {
+
+                $('#addTaskSuccess').modal('show');
+
+                $('body').click(function () {
+                    location.reload();
+                })
+
+
+            } else {
+                console.log("pole korras");
+
+
+                $('#addTransactionError').modal('show');
+
+            }
+        });
+    })
+
+</script>
+
+<!-- add TASK SUCCESS-->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="addTaskSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body" id="addTaskSuccessBody">
+
+                <h2>Salvestatud!</h2>
+                <h4>Sisestatud tehing on edukalt salvestatud.</h4>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
