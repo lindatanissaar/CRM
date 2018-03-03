@@ -23,6 +23,11 @@
 
     <link href="node_modules/pikaday/css/pikaday.css" rel="stylesheet">
 
+    <!-- Animate modal CSS -->
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
+
+
 
 
 
@@ -30,6 +35,22 @@
     <style>
         body {
             padding-top: 70px;
+        }
+
+        body {
+            background-color: #F8F8F8;
+        }
+
+        .column-l {
+            width: 90%;
+            display: inline-block;
+            background-color: white;
+            padding: 30px;
+        }
+
+        .column-r {
+            width: 8%;
+            display: inline-block;
         }
 
         .container {
@@ -91,6 +112,10 @@
         }
 
         #user-name, #user-picture {
+            display: inline-block;
+        }
+
+        .user-account {
             display: inline-block;
         }
 
@@ -381,7 +406,6 @@
             display: none;
             height: 40px;
             margin: 0;
-            padding: 5px;
         }
 
 
@@ -427,7 +451,7 @@
             <a class="navbar-brand" href="#"><img src="assets/img/logo-kodulehekoolitused.png"/></a>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav mx-auto">
                 <li <?= $controller == 'welcome' ? 'class="active"' : '' ?>><a href="#">Home</a></li>
                 <li <?= $controller == 'halo' ? 'class="active"' : '' ?>><a href="halo">Halo admin</a></li>
                 <li <?= $controller == 'projects' ? 'class="active"' : '' ?>><a href="projects">Tehingud</a></li>
@@ -437,29 +461,26 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <div class="user-account">
-                    <img id="user-picture" src="assets/img/logo_Linda.jpg" />
-                    <a id="user-name" href="#" class="dropdown-toggle account-section" data-toggle="dropdown"><?= $auth->name ?> <b class="caret"></b></a>
-                </div>
                 <li class="dropdown">
-
+                    <div class="user-account">
+                        <img id="user-picture" src="assets/img/logo_Linda.jpg" />
+                    </div>
+                    <a id="user-name" href="#" class="dropdown-toggle account-section" data-toggle="dropdown"><?= $auth->name ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><? __('Action') ?></a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa tegevus</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa tehing</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa vastutaja</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lisa tegevuse nimetus</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Vaata kõiki tehinguid</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="admins"><? __('Action') ?></a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="admins">Profiili seaded</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="admins">Admin tegevused</a></li>
                         <li role="presentation" class="divider"></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="logout">Logi välja</a></li>
                     </ul>
                 </li>
             </ul>
-
         </div>
         <!--/.nav-collapse -->
     </div>
 </nav>
+
+<!--
 
 <div class="row">
     <div class="column-left"></div>
@@ -468,7 +489,7 @@
             <h4>Tulemused puuduvad</h4>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="container">
 

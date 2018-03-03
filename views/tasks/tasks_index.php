@@ -1,20 +1,6 @@
 <style>
 
-    body {
-        background-color: #F8F8F8;
-    }
 
-    .column-l {
-        width: 90%;
-        display: inline-block;
-        background-color: white;
-        padding: 30px;
-    }
-
-    .column-r {
-        width: 8%;
-        display: inline-block;
-    }
 
     #searchTasksInput {
         padding-right: 10%;
@@ -30,6 +16,12 @@
 
     .displayNone {
         display: none;
+    }
+
+    .column-l{
+        -webkit-box-shadow: 0 10px 6px -6px #777;
+        -moz-box-shadow: 0 10px 6px -6px #777;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 
 
@@ -110,7 +102,7 @@
 
         <div class="row">
 
-            <div class="column-left">
+            <div class="column-left effect1">
                 <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal"
                         data-keyboard="true"
                         data-target="#myModal">Lisa tegevus

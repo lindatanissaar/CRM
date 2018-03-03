@@ -1,5 +1,10 @@
 <style>
 
+    .table-responsive {
+        padding: 30px;
+        background-color: white;
+    }
+
 
 
 </style>
@@ -80,9 +85,11 @@
 </script>
 
 
-<div class="row"></div>
 
-<div class="row">
+
+<div class="row white"></div>
+
+<div class="row white">
 
     <div class="column-left">
         <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal" data-keyboard="true"
