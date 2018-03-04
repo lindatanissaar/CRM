@@ -41,6 +41,11 @@
             background-color: #F8F8F8;
         }
 
+        .btn-success {
+            background-color: #38B87C;
+            border-color: #38B87C;
+        }
+
         .column-l {
             width: 90%;
             display: inline-block;
@@ -245,7 +250,6 @@
         /* table sorting CSS*/
 
         th.header {
-            /*background-image: url('assets/img/bg.png') !important;*/
             cursor: pointer;
             background-repeat: no-repeat;
             background-position: right center;
@@ -351,9 +355,10 @@
         /* table statuses*/
 
         .status_won span {
-            background-color: #e5f6d3;
+            background-color: #38B87C;
             padding: 5px 10px 5px 10px;
             border-radius: 4px;
+            color: white;
         }
 
         .status_lost span {

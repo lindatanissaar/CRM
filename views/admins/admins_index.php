@@ -1,6 +1,5 @@
 <style>
 
-
     /*sidebar menu*/
     #cssmenu {
         background: white;
@@ -55,7 +54,6 @@
         box-shadow: none;
         border: none;
         float: right;
-
     }
 
     .modal-lg {
@@ -73,6 +71,50 @@
 
     select.input-sm {
         color: black;
+    }
+
+    #taskName, #taskName:focus {
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        box-shadow: none;
+        border-bottom: solid 2px #d4d4d4;
+        border-radius: 0;
+    }
+
+    .activity_desc {
+        padding: 8px;
+        background-color: #F8F8F8;
+        width: 50%;
+        margin: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .modal-header {
+        background-color: white;
+        border-color: white;
+    }
+
+    .activity_desc, .deleteTaskName {
+        display: inline-block;
+    }
+
+    .deleteTaskName {
+        -webkit-filter: grayscale(100%);
+        opacity: 0.5;
+    }
+
+    .deleteTaskName:hover {
+        -webkit-filter: grayscale(0%);
+        opacity: 1;
+
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+        cursor: pointer;
     }
 
 
@@ -100,6 +142,9 @@
 
             <!-- Modal content-->
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
 
                 <div class="modal-body">
 
@@ -188,6 +233,9 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-body">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
 
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -283,13 +331,31 @@
 
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-body">
-                <p>Some text in the modal.</p>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-footer">
+            <div class="modal-body">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg" id="taskName" placeholder="Tegevuse liik">
+                    </div>
+                </div>
+                <div class="col-lg-6 activity_description">
+                        <?php foreach ($activity_descriptions as $activity_description): ?>
+                            <div class="activity_desc" id="<?= $activity_description['ID'] ?>"><?= $activity_description['DESCRIPTION'] ?></div>
+                            <img class="deleteTaskName" src="assets/img/icon-delete.png"/>
+                        <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="modal-footer addTask">
+                <button id="addTaskDesc" type="button" class="btn btn-success" data-dismiss="modal">
+                    Salvesta
+                </button>
+                <button id="saveTaskDescAndAddNew" type="button" class="btn btn-basic">Salvesta ja lisa
+                    uus
+                </button>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -300,6 +366,9 @@
 
         <!-- Modal content-->
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
             <div class="modal-body">
                 <h2>Lisa uus töötaja</h2>
                 <p></p>
@@ -318,6 +387,9 @@
 
         <!-- Modal content-->
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
             <div class="modal-body">
                 <p>Some text in the modal.</p>
             </div>
@@ -436,6 +508,71 @@
 </div>
 
 
+<!-- add task description -->
+
+<script>
+
+    $("#addTaskDesc").click(function(){
+        var activityDescription = $("#taskName").val();
+
+
+        // make $.post query
+        $.post("admins/addTaskName", {
+            activityDescription: activityDescription
+        }).done(function (data) {
+            if (data == "success") {
+                location.reload();
+
+            } else {
+                console.log("pole korras");
+            }
+        });
+    })
+
+    $(".deleteTaskName").click(function () {
+        var taskDescId = $(this).prev().attr('id');
+
+        // make $.post query
+        $.post("admins/deleteTaskDesc", {
+            taskDescId: taskDescId
+        }).done(function (data) {
+            if (data == "success") {
+                console.log("korras");
+                $('#deleteTaskNameSuccess').modal('show');
+                $('body').click(function(){
+                    location.reload();
+                })
+
+
+            } else {
+                console.log("pole korras");
+                $('body').click(function(){
+                    location.reload();
+                })
+            }
+        });
+    });
+
+
+
+</script>
+
+
+<!-- delete TASK desc SUCCESS-->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteTaskNameSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body" id="deleteTaskNameSuccessBody">
+
+                <h2>Kustutatud!</h2>
+                <h4></h4>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

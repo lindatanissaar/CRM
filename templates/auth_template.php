@@ -13,6 +13,16 @@
     <style>
         body {
             padding-top: 50px;
+            background: url("assets/img/test.jpg") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        .alert-danger {
+            background-image: none;
+            border: none;
         }
 
         .form-signin {
@@ -30,6 +40,15 @@
             font-weight: normal;
         }
 
+        .form-control, .form-control:focus {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            box-shadow: none;
+            border-bottom: solid 2px #d4d4d4;
+
+        }
+
         .form-signin .form-control {
             position: relative;
             font-size: 16px;
@@ -42,6 +61,12 @@
 
         .form-signin .form-control:focus {
             z-index: 2;
+        }
+
+        .btn-primary {
+            background-color: #38B87C;
+            background-image: none;
+            border-color: #38B87C;
         }
 
         .modal-input input[type="text"] {
@@ -67,16 +92,43 @@
         form.form-signin {
             background-color: #ffffff;
         }
+
+        body {
+            padding: 0;
+        }
+
+        .header {
+            height: 15px;
+            background-color: #38B87C;
+        }
+
+        .container {
+            padding-top: 100px;
+        }
+
+        #user {
+            background: url(assets/img/icon-contactperson.png) no-repeat scroll 7px 7px;
+            padding-left:30px;
+        }
+
+        #pass {
+            background: url(assets/img/key.png) no-repeat scroll 7px 7px;
+            padding-left:30px;
+        }
+
+
     </style>
 </head>
 
 <body>
 
+<div class="header"></div>
+
 <div class="container">
 
     <form class="form-signin" method="post">
 
-        <h2 class="form-signin-heading"><?= __('Please sign in') ?></h2>
+        <h2 class="form-signin-heading"><?= __('Log in') ?></h2>
 
         <?php if (isset($errors)) {
             foreach ($errors as $error): ?>
@@ -87,20 +139,16 @@
         } ?>
 
 
-        <label for="user"><?= __('Email') ?></label>
 
         <div class="input-group">
-            <span class="input-group-addon"><i class="icon-user"></i></span>
-            <input id="user" name="email" type="text" class="form-control" placeholder="demo@example.com" autofocus>
+            <input id="user" name="email" type="text" class="form-control" placeholder="Username" autofocus>
         </div>
 
         <br/>
 
-        <label for="pass"><?= __('Password') ?></label>
 
         <div class="input-group">
-            <span class="input-group-addon"><i class="icon-key"></i></span>
-            <input id="pass" name="password" type="password" class="form-control" placeholder="******">
+            <input id="pass" name="password" type="password" class="form-control" placeholder="Password">
         </div>
 
         <br/>

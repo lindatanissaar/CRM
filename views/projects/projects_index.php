@@ -5,6 +5,13 @@
         background-color: white;
     }
 
+    .status_won span {
+        background-color: #38B87C;
+        padding: 5px 10px 5px 10px;
+        border-radius: 4px;
+        color: white;
+    }
+
 </style>
 
 
@@ -273,7 +280,6 @@
 
     </table>
 
-
 </div>
 
     <script src="node_modules/moment/moment.js"></script>
@@ -291,8 +297,6 @@
             });
 
     </script>
-
-
 
     <script>
 
@@ -334,10 +338,6 @@
                 }
             });
         })
-
-
-
-
 
 
 $("#saveAndAddNew").click(function () {
@@ -417,7 +417,6 @@ $("#saveAndAddNew").click(function () {
     // edit table row
 
 
-
     $(".editTableRow").click(function () {
         var transaction_id = $(this).parent().parent().attr('id');
         $.post("projects/editTableRow", {
@@ -481,12 +480,9 @@ $("#saveAndAddNew").click(function () {
 <div class="modal fade" tabindex="-1" role="dialog" id="addTransactionSuccess" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-
             <div class="modal-body" id="addTransactionSuccessBody">
-
                 <h2>Salvestatud!</h2>
                 <h4>Sisestatud tehing on salvestatud.</h4>
-
             </div>
         </div>
     </div>
