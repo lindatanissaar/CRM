@@ -20,4 +20,15 @@ class Admin
         ]);
     }
 
+    static function addNewEmployee($firstName, $lastName){
+        $firstName = htmlspecialchars($firstName);
+        $lastName = htmlspecialchars($lastName);
+
+        insert('employee', [
+            'FIRST_NAME' => $firstName,
+            'LAST_NAME' => $lastName
+        ]);
+
+    }
+
 }

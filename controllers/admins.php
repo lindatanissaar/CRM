@@ -42,4 +42,23 @@ class admins extends Controller
 
         }
     }
+
+    function AJAX_addNewEmployee() {
+        if(isset($_POST["firstName"]) && isset($_POST["lastName"])) {
+
+            Admin_Model::addNewEmployee($_POST["firstName"],$_POST["lastName"]);
+            exit("success");
+
+        }
+    }
+
+    function AJAX_deleteEmployee() {
+        if(isset($_POST["employeeId"])){
+            q("DELETE FROM employee WHERE ID = '" . $_POST["employeeId"] . "'");
+
+            exit("success");
+
+        }
+
+    }
 }

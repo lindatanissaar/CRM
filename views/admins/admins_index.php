@@ -67,13 +67,14 @@
         padding: 15px;
         text-align: right;
         border-top: 1px solid white;
+        margin-top: 50px;
     }
 
     select.input-sm {
         color: black;
     }
 
-    #taskName, #taskName:focus {
+    #taskName, #taskName:focus, #firstName, #firstName:focus, #lastName, #lastName:focus  {
         border-top: none;
         border-left: none;
         border-right: none;
@@ -82,11 +83,18 @@
         border-radius: 0;
     }
 
-    .activity_desc {
+    #firstName, #lastName {
+        display: inline-block;
+        width: 40%;
+        margin: 2%;
+    }
+
+    .activity_desc, .employees {
         padding: 8px;
         background-color: #F8F8F8;
         width: 50%;
-        margin: 10px;
+        margin: auto;
+        margin-bottom: 10px;
         border-radius: 8px;
         cursor: pointer;
     }
@@ -100,12 +108,13 @@
         display: inline-block;
     }
 
-    .deleteTaskName {
+    .deleteTaskName, .deleteEmployee {
+        margin-left: 50%;
         -webkit-filter: grayscale(100%);
-        opacity: 0.5;
+        opacity: 0.1;
     }
 
-    .deleteTaskName:hover {
+    .deleteTaskName:hover, .deleteEmployee:hover {
         -webkit-filter: grayscale(0%);
         opacity: 1;
 
@@ -114,6 +123,14 @@
         -o-transition: all 0.2s ease;
         -ms-transition: all 0.2s ease;
         transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    a:focus {
+        outline: none;
+    }
+
+    li a:hover {
         cursor: pointer;
     }
 
@@ -128,7 +145,7 @@
             <li class='active'><a id="addTransactionModal" href="#adminTransactionModal" data-toggle="modal"><span>Lisa tehing</span></a></li>
             <li><a data-toggle="modal" href="#adminTaskModal"><span>Lisa tegevus</span></a></li>
             <li><a data-toggle="modal" href='#adminTaskNameModal'><span>Lisa tegevuse nimetus</span></a></li>
-            <li><a data-toggle="modal" href='#addSupervisorModel'><span>Lisa vastutaja</span></a></li>
+            <li><a data-toggle="modal" href='#adminAddEmployeeModal'><span>Lisa vastutaja</span></a></li>
             <li class='last'><a data-toggle="modal" href='#displayAllTransactions'><span>Vaata kõiki tehinguid</span></a></li>
         </ul>
     </div>
@@ -342,8 +359,8 @@
                 </div>
                 <div class="col-lg-6 activity_description">
                         <?php foreach ($activity_descriptions as $activity_description): ?>
-                            <div class="activity_desc" id="<?= $activity_description['ID'] ?>"><?= $activity_description['DESCRIPTION'] ?></div>
-                            <img class="deleteTaskName" src="assets/img/icon-delete.png"/>
+                            <div class="activity_desc" id="<?= $activity_description['ID'] ?>"><?= $activity_description['DESCRIPTION'] ?><img class="deleteTaskName" src="assets/img/icon-cross.png"/>
+                            </div>
                         <?php endforeach; ?>
                 </div>
             </div>
@@ -360,8 +377,8 @@
 </div>
 
 
-<!-- addSupervisorModel -->
-<div id="addSupervisorModel" class="modal" role="dialog">
+<!-- addEmployee -->
+<div id="adminAddEmployeeModal" class="modal" role="dialog">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -370,15 +387,83 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <h2>Lisa uus töötaja</h2>
-                <p></p>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg" id="firstName" placeholder="Eesnimi">
+                        <input type="text" class="form-control input-lg" id="lastName" placeholder="Perenimi">
+                    </div>
+                </div>
+                <div class="col-lg-6 newEmployee">
+                    <?php foreach ($employees as $employee): ?>
+                        <div class="employees" id="<?= $employee['ID'] ?>"><?= $employee['FIRST_NAME'] . " " . $employee['LAST_NAME'] ?><img class="deleteEmployee" src="assets/img/icon-cross.png"/>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer addTask">
+                <button id="addNewEmployee" type="button" class="btn btn-success" data-dismiss="modal">
+                    Salvesta
+                </button>
+                <button id="saveNewEmployeeAndAddNew" type="button" class="btn btn-basic">Salvesta ja lisa
+                    uus
+                </button>
+
             </div>
         </div>
-
     </div>
 </div>
+
+<!-- add new employee -->
+
+<script>
+
+    $("#addNewEmployee").click(function(){
+        var firstName = $("#firstName").val();
+        var lastName = $("#lastName").val();
+
+
+        // make $.post query
+        $.post("admins/addNewEmployee", {
+            firstName: firstName,
+            lastName: lastName
+        }).done(function (data) {
+            if (data == "success") {
+                location.reload();
+
+            } else {
+                console.log("pole korras");
+            }
+        });
+    })
+
+    $(".deleteEmployee").click(function () {
+        var employeeId = $(this).parent().attr('id');
+
+        // make $.post query
+        $.post("admins/deleteEmployee", {
+            employeeId: employeeId
+        }).done(function (data) {
+            if (data == "success") {
+                console.log("korras");
+                $('#deleteTaskNameSuccess').modal('show');
+                $('body').click(function(){
+                    location.reload();
+                })
+
+
+            } else {
+                console.log("pole korras");
+                $('body').click(function(){
+                    location.reload();
+                })
+            }
+        });
+    });
+
+
+
+</script>
+
 
 
 <!-- displayAllTransactions -->
@@ -530,7 +615,7 @@
     })
 
     $(".deleteTaskName").click(function () {
-        var taskDescId = $(this).prev().attr('id');
+        var taskDescId = $(this).parent().attr('id');
 
         // make $.post query
         $.post("admins/deleteTaskDesc", {
