@@ -15,6 +15,15 @@
 
 </style>
 
+<!-- sort table -->
+
+<script>
+    $(document).ready(function () {
+            $("#lostProjects").tablesorter({dateFormat: 'pt'});
+        }
+    );
+</script>
+
 <link href="node_modules/pizza-master/dist/css/pizza.css" media="screen, projector, print" rel="stylesheet" type="text/css" />
 
 <script>
@@ -69,7 +78,7 @@
 
     <div class="table-responsive">
 
-        <table class="table tablesorter results"  id="transactionsTable">
+        <table class="table tablesorter results"  id="lostProjects">
 
             <thead  class="header" id="tableHeader">
             <tr title="Sorteeri tabelit veergude järgi">

@@ -59,6 +59,15 @@
     });
 </script>
 
+<!-- sort table -->
+
+<script>
+    $(document).ready(function () {
+            $("#wonProjects").tablesorter({dateFormat: 'pt'});
+        }
+    );
+</script>
+
 <div class="row">
     <div class="column-l">
             <div class="input-group">
@@ -69,7 +78,7 @@
 
     <div class="table-responsive">
 
-        <table class="table tablesorter results"  id="transactionsTable">
+        <table class="table tablesorter results"  id="wonProjects">
 
             <thead  class="header" id="tableHeader">
             <tr title="Sorteeri tabelit veergude järgi">
