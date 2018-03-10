@@ -1,7 +1,6 @@
 <style>
 
 
-
     #searchTasksInput {
         padding-right: 10%;
     }
@@ -24,7 +23,6 @@
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 5px 19px 0 rgba(0, 0, 0, 0.19);
         border-radius: 10px;
     }
-
 
 
 </style>
@@ -108,13 +106,9 @@
                         data-keyboard="true"
                         data-target="#myModal">Lisa tegevus
                 </button>
-
-
             </div>
 
             <div class="column-right">
-
-
                 <div class="input-group">
                     <input type="text" class="form-control input-md" id="daterangepicker">
                 </div>

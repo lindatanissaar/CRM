@@ -17,11 +17,54 @@
 
 <link href="node_modules/pizza-master/dist/css/pizza.css" media="screen, projector, print" rel="stylesheet" type="text/css" />
 
+<script>
+    $(document).ready(function () {
+        $(".search").keyup(function () {
+            var searchTerm = $(".search").val();
+            var listItem = $('.results tbody').children('tr');
+            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
 
+            $.extend($.expr[':'], {
+                'containsi': function (elem, i, match, array) {
+                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                }
+            });
+
+            $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'false');
+            });
+
+            $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'true');
+            });
+
+            var jobCount = $('.results tbody tr[visible="true"]').length;
+
+            if (jobCount == 1) {
+                $('.counter').text(jobCount + ' tulemus');
+
+            } else {
+                $('.counter').text(jobCount + ' tulemust');
+            }
+
+            if (jobCount == '0') {
+                $('.no-result').show();
+            }
+            else {
+                $('.no-result').hide();
+            }
+        });
+    });
+</script>
 
 <div class="row">
 
     <div class="column-l">
+
+        <div class="input-group">
+            <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
+        </div>
+        <span class="counter"></span>
     <h3>Kaotatud tehingud</h3>
 
     <div class="table-responsive">
