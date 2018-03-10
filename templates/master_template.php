@@ -143,6 +143,7 @@
 
         .form-control:focus {
             box-shadow: none;
+            border-color: #e7e7e7;
         }
 
         option {
@@ -208,10 +209,12 @@
 
         .modal-header {
             background-color: #eee;
+            border-bottom: none;
         }
 
         .modal-footer {
             background-color: #F0F0F0;
+            border-top: none;
         }
 
         .modal-title {
@@ -321,7 +324,7 @@
 
         .editTableRow {
             -webkit-filter: grayscale(100%);
-            opacity: 0.5;
+            opacity: 0.2;
         }
 
         .editTableRow:hover {
@@ -337,7 +340,7 @@
 
         .deleteTableRow {
             -webkit-filter: grayscale(100%);
-            opacity: 0.5;
+            opacity: 0.2;
         }
 
         .deleteTableRow:hover {
@@ -350,7 +353,6 @@
             -ms-transition: all 0.2s ease;
             transition: all 0.2s ease;
         }
-
 
         /* table statuses*/
 
@@ -401,7 +403,7 @@
         }
 
         .table>thead>tr.warning>td {
-            background-color: #f6ccd1;
+            background-color: white;
             color: #dc4d5d;
         }
 
@@ -461,8 +463,16 @@
                 <li <?= $controller == 'halo' ? 'class="active"' : '' ?>><a href="halo">Halo admin</a></li>
                 <li <?= $controller == 'projects' ? 'class="active"' : '' ?>><a href="projects">Tehingud</a></li>
                 <li <?= $controller == 'tasks' ? 'class="active"' : '' ?>><a href="tasks">Tegevused</a></li>
-                <li <?= $controller == 'statistics' ? 'class="active"' : '' ?>><a href="statistics">Statistika</a></li>
+                <li class="dropdown">
 
+                    <a href="statistics" class="dropdown-toggle account-section" data-toggle="dropdown">Statistika<b class="caret"></b></>
+                    <ul class="dropdown-menu">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="wonProject">Võidetud pojektid</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="lostProjects">Kaotatud pojektid </a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="unknownProjects">Pole teada pojektid</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="completedProjects">Lõpetatud pojektid</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -521,6 +531,12 @@
 <!-- tablesorter JS -->
 
 <script type="text/javascript" src="assets/js/jquery.tablesorter.min.js"></script>
+
+<script src="node_modules/pizza-master/dist/js/pizza.js"></script>
+<script src="node_modules/pizza-master/dist/js/vendor/modernizr.js"></script>
+<script src="node_modules/pizza-master/dist/js/vendor/dependencies.js"></script>
+<script src="node_modules/pizza-master/js/pizza/pie.js"></script>
+<script src="node_modules/pizza-master/js/pizza/line.js"></script>
 
 
 

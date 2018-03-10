@@ -407,7 +407,6 @@
                 <button id="saveNewEmployeeAndAddNew" type="button" class="btn btn-basic">Salvesta ja lisa
                     uus
                 </button>
-
             </div>
         </div>
     </div>
