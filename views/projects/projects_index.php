@@ -1,8 +1,7 @@
 <style>
 
-    .table-responsive {
-        padding: 30px;
-        background-color: white;
+    .content {
+        width: 100%;
     }
 
     .status_won span {
@@ -12,44 +11,59 @@
         color: white;
     }
 
+    /* pagination */
+    .pagination {
+        display: inline-block;
+        margin: 0;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 5px 9px;
+        text-decoration: none;
+    }
+
+    .pagination a.active {
+        background-color: #38B87C;
+        color: white;
+    }
+
+    .pagination a:hover:not(.active) { background-color: #ddd; }
+
+    #btnApplyPagination {
+        background-color: #dc4d5d;
+        border-color: #dc4d5d;
+    }
+
+    #pg_transactionsTable {
+        float: right;
+    }
+
+    .form-group {
+        display: inline-block;
+    }
+
+    #pglmt {
+        width:20%;
+        text-align: center;
+    }
+
+    #pglmtLabel, #pglmt {
+        display: inline-block;
+    }
+
+    .pglmt {
+        text-align: center;
+    }
+
+    .pageLimit {
+        float: right;
+    }
+
 </style>
 
-
-<script>
-    $(document).ready(function() {
-        $(".search").keyup(function () {
-            var searchTerm = $(".search").val();
-            var listItem = $('.results tbody').children('tr');
-            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
-
-            $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
-                return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-            }
-            });
-
-            $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
-                $(this).attr('visible','false');
-            });
-
-            $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
-                $(this).attr('visible','true');
-            });
-
-            var jobCount = $('.results tbody tr[visible="true"]').length;
-
-            if (jobCount == 1){
-                $('.counter').text(jobCount + ' tulemus');
-
-            }else {
-                $('.counter').text(jobCount + ' tulemust');
-
-            }
-
-            if(jobCount == '0') {$('.no-result').show();}
-            else {$('.no-result').hide();}
-        });
-    });
-</script>
+<script src="node_modules/table-paging/jquery.table.hpaging.js"></script>
 
 <script>
 
@@ -78,7 +92,6 @@
         });
     });
 
-
 </script>
 
 
@@ -90,10 +103,8 @@
 
 
 
-
-<div class="row white"></div>
-
-<div class="row white">
+<div class="content">
+    <div class="row">
 
     <div class="column-left">
         <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal" data-keyboard="true"
@@ -105,16 +116,70 @@
         <a title="Muuda tabeli veerge"><img id="changeTableColumns" src="assets/img/icon-add.png" /></a>
     </div>
 
-    <div class="column-right">
-
-        <div class="input-group">
-            <input type="text" class="form-control input-md search" id="searchTransactionInput" placeholder="Otsi">
-        </div>
-        <span class="counter"></span>
-
     </div>
 
-</div>
+    <div class="row">
+
+        <div class="table-responsive">
+            <div class="input-group">
+                <input type="text" class="form-control input-md search" id="searchTransactionInput" placeholder="Otsi">
+            </div>
+            <span class="counter"></span>
+
+            <div class="pageLimit">
+                <div class="form-group pglmt">
+                    <label id="pglmtLabel" for="pglmt">Näita: </label>
+                    <input id="pglmt" title="Ridade arv"  value="5" class="form-control input-sm">
+                </div>
+
+            </div>
+
+            <table class="table tablesorter results"  id="transactionsTable">
+
+                <thead  class="header" id="tableHeader">
+                <tr title="Sorteeri tabelit veergude järgi">
+                    <th>Nimetus</th>
+                    <th class="price">Väärtus</th>
+                    <th>Ettevõte</th>
+                    <th>Kontaktisik</th>
+                    <th>E-mail</th>
+                    <th class="phone">Telefon</th>
+                    <th class="date">Tähtaeg</th>
+                    <th>Staatus</th>
+                    <th>Märkused</th>
+                </tr>
+
+                <tr class="warning no-result">
+                    <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
+                </thead>
+
+                <tbody>
+
+                <?php foreach ($transactions as $transaction): ?>
+                    <tr id="<?= $transaction['ID'] ?>">
+                        <td class="transaction_name" contenteditable><?= $transaction['NAME'] ?></td>
+                        <td class="price" contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
+                        <td class="organisation_name" contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
+                        <td class="contact_person_name" contenteditable><?= $transaction['CONTACT_PERSON_NAME'] ?></td>
+                        <td class="email" contenteditable><?= $transaction['EMAIL'] ?></td>
+                        <td class="phone" contenteditable><?= $transaction['PHONE'] ?></td>
+                        <td class="date" contenteditable><?= date("d-m-Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
+                        <td class="status" contenteditable><span><?= $transaction['STATUS'] ?></span></td>
+                        <td class="note" contenteditable><?= $transaction['NOTE'] ?></td>
+                        <td class="editAndDeleteTable">
+                            <a title="Tehingu hulgimuutmine" class="editTableRow"><img src="assets/img/icon-edit.png"/></a>
+                            <a title="Kogu tehingu kustutamine" class="deleteTableRow"><img src="assets/img/icon-delete.png"/></a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 <div class="row">
 
@@ -223,6 +288,8 @@
     </div>
 </div>
 
+</div>
+
 <!-- Table -->
 
 <script>
@@ -233,54 +300,6 @@
     );
 
 </script>
-
-
-<div class="table-responsive">
-
-    <table class="table tablesorter results"  id="transactionsTable">
-
-        <thead  class="header" id="tableHeader">
-        <tr title="Sorteeri tabelit veergude järgi">
-            <th>Nimetus</th>
-            <th class="price">Väärtus</th>
-            <th>Ettevõte</th>
-            <th>Kontaktisik</th>
-            <th>E-mail</th>
-            <th class="phone">Telefon</th>
-            <th class="date">Tähtaeg</th>
-            <th>Staatus</th>
-            <th>Märkused</th>
-        </tr>
-
-        <tr class="warning no-result">
-            <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
-        </thead>
-
-        <tbody>
-
-        <?php foreach ($transactions as $transaction): ?>
-            <tr id="<?= $transaction['ID'] ?>">
-                <td class="transaction_name" contenteditable><?= $transaction['NAME'] ?></td>
-                <td class="price" contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
-                <td class="organisation_name" contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
-                <td class="contact_person_name" contenteditable><?= $transaction['CONTACT_PERSON_NAME'] ?></td>
-                <td class="email" contenteditable><?= $transaction['EMAIL'] ?></td>
-                <td class="phone" contenteditable><?= $transaction['PHONE'] ?></td>
-                <td class="date" contenteditable><?= date("d-m-Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
-                <td class="status" contenteditable><span><?= $transaction['STATUS'] ?></span></td>
-                <td class="note" contenteditable><?= $transaction['NOTE'] ?></td>
-                <td class="editAndDeleteTable">
-                    <a title="Tehingu hulgimuutmine" class="editTableRow"><img src="assets/img/icon-edit.png"/></a>
-                    <a title="Kogu tehingu kustutamine" class="deleteTableRow"><img src="assets/img/icon-delete.png"/></a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-
-        </tbody>
-
-    </table>
-
-</div>
 
     <script src="node_modules/moment/moment.js"></script>
     <script src="node_modules/pikaday/pikaday.js"></script>
@@ -695,6 +714,61 @@ $("#saveAndAddNew").click(function () {
     </div>
 
 </div>
+
+
+<!-- pagination -->
+
+<script>
+    $(function () {
+        $("#transactionsTable").hpaging({ "limit": 5 });
+    });
+
+    $("#pglmt").keyup(function() {
+        var lmt = $(this).val();
+        if(lmt == "" || lmt == "0"){
+            console.log("siin");
+        }else {
+            $("#transactionsTable").hpaging("newLimit", lmt);
+        }
+    });
+
+</script>
+
+<script>
+    $(document).ready(function() {
+        $(".search").keyup(function () {
+            var searchTerm = $(".search").val();
+            var listItem = $('.results tbody').children('tr');
+            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+            $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+                return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+            }
+            });
+
+            $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+                $(this).attr('visible','false');
+            });
+
+            $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+                $(this).attr('visible','true');
+            });
+
+            var jobCount = $('.results tbody tr[visible="true"]').length;
+
+            if (jobCount == 1){
+                $('.counter').text(jobCount + ' tulemus');
+
+            }else {
+                $('.counter').text(jobCount + ' tulemust');
+
+            }
+
+            if(jobCount == '0') {$('.no-result').show();}
+            else {$('.no-result').hide();}
+        });
+    });
+</script>
 
 
 

@@ -24,53 +24,63 @@
         border-radius: 10px;
     }
 
+    /* pagination */
+    .pagination {
+        display: inline-block;
+        margin: 0;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 5px 9px;
+        text-decoration: none;
+    }
+
+    .pagination a.active {
+        background-color: #38B87C;
+        color: white;
+    }
+
+    .pagination a:hover:not(.active) { background-color: #ddd; }
+
+    #btnApplyPagination {
+        background-color: #dc4d5d;
+        border-color: #dc4d5d;
+    }
+
+    #pg_tasksTable {
+        float: right;
+    }
+
+    .form-group {
+        display: inline-block;
+    }
+
+    #pglmt {
+        width:20%;
+        text-align: center;
+    }
+
+    #pglmtLabel, #pglmt {
+        display: inline-block;
+    }
+
+    .pglmt {
+        text-align: center;
+    }
+
+    .pageLimit {
+        float: right;
+    }
+
+
 
 </style>
 
-<!-- search from tasks table-->
+<script src="node_modules/table-paging/jquery.table.hpaging.js"></script>
 
-<script>
 
-    $(document).ready(function () {
-        $(".search").keyup(function () {
-            var searchTerm = $(".search").val();
-            var listItem = $('.results tbody').children('tr');
-            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
-
-            $.extend($.expr[':'], {
-                'containsi': function (elem, i, match, array) {
-                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-                }
-            });
-
-            $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
-                $(this).attr('visible', 'false');
-            });
-
-            $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
-                $(this).attr('visible', 'true');
-            });
-
-            var jobCount = $('.results tbody tr[visible="true"]').length;
-
-            if (jobCount == 1) {
-                $('.counter').text(jobCount + ' tulemus');
-
-            } else {
-                $('.counter').text(jobCount + ' tulemust');
-
-            }
-
-            if (jobCount == '0') {
-                $('.no-result').show();
-            }
-            else {
-                $('.no-result').hide();
-            }
-        });
-    });
-
-</script>
 
 <!--use tooltips -->
 
@@ -92,173 +102,165 @@
     );
 </script>
 
+
+
 <!-- filter table no results-->
 
+<div class="content">
+    <div class="row">
 
-<div class="row">
-
-    <div class="column-l">
-
-        <div class="row">
-
-            <div class="column-left effect1">
-                <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal"
-                        data-keyboard="true"
-                        data-target="#myModal">Lisa tegevus
-                </button>
-            </div>
-
-            <div class="column-right">
-                <div class="input-group">
-                    <input type="text" class="form-control input-md" id="daterangepicker">
-                </div>
-            </div>
-
+        <div class="column-left">
+            <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal"
+                    data-keyboard="true"
+                    data-target="#myModal">Lisa tegevus
+            </button>
         </div>
 
-        <div class="row">
-            <div class="column-left">
-                <div class="input-group">
-                    <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
-                </div>
-                <span class="counter"></span>
+        <div class="column-right">
+            <div class="input-group">
+                <input type="text" class="form-control input-md" id="daterangepicker">
             </div>
         </div>
 
+    </div>
 
-        <div class="row">
+    <div class="row">
 
-            <!-- Modal -->
-            <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
-                <div class="vertical-alignment-helper">
-                    <div class="modal-lg vertical-align-center">
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h3 class="modal-title">Lisa tegevus</h3>
-                            </div>
-                            <div class="modal-body">
-                                <div class="modal-body row">
-                                    <div class="col-lg-8">
+        <div class="table-responsive">
+            <div class="input-group">
+                <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
+            </div>
+            <span class="counter"></span>
 
-                                        <div class="form-group">
-                                            <input type="text" class="form-control col-lg-8"
-                                                   placeholder="Tegevuse nimetus"
-                                                   id="activityDescriptionId" list="activity_description">
-                                            <datalist id="activity_description">
-                                                <?php foreach ($activity_descriptions as $activity_description): ?>
-                                                    <option id="<?= $activity_description['ID'] ?>"><?= $activity_description['DESCRIPTION'] ?></option>
-                                                <?php endforeach; ?>
-                                            </datalist>
-                                        </div>
+            <div class="pageLimit">
+                <div class="form-group pglmt">
+                    <label id="pglmtLabel" for="pglmt">Näita: </label>
+                    <input id="pglmt" title="Ridade arv"  value="5" class="form-control input-sm">
+                </div>
+            </div>
 
-                                        <div class="form-group col-lg-4">
-                                            <label for="datepicker">Tähtaeg:</label>
+            <table class="table tablesorter results" id="tasksTable">
 
-                                            <input type="text" class="form-control input-sm" id="datepicker"
-                                                   placeholder="Tähtaeg">
+                <thead class="header" id="tableHeader">
+                <tr title="Sorteeri tabelit veergude järgi">
+                    <th>Nimetus</th>
+                    <th>Vastutaja</th>
+                    <th>Seosta tehinguga</th>
+                    <th>Tähtaeg</th>
+                </tr>
 
-                                        </div>
+                <tr class="warning no-result">
+                    <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
+                </thead>
+
+                <tbody>
+
+                <?php foreach ($activities as $activity): ?>
+                    <tr id="<?= $activity['ID'] ?>">
+                        <td class="activity_description" contenteditable><?= $activity['DESCRIPTION'] ?></td>
+                        <td class="employee_name"
+                        "<?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?>"
+                        contenteditable><?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?></td>
+                        <td class="transaction_name" contenteditable><?= $activity['NAME'] ?></td>
+                        <td class="date"
+                            contenteditable><?= date("d-m-Y", strtotime($activity['DEADLINE_DATE'])) ?></td>
+                        <td class="editAndDeleteTable">
+                            <a title="Kogu tegevuse kustutamine" class="deleteTableRow"><img
+                                        src="assets/img/icon-delete.png"/></a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    <div class="row">
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
+            <div class="vertical-alignment-helper">
+                <div class="modal-lg vertical-align-center">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3 class="modal-title">Lisa tegevus</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-body row">
+                                <div class="col-lg-8">
+
+                                    <div class="form-group">
+                                        <input type="text" class="form-control col-lg-8"
+                                               placeholder="Tegevuse nimetus"
+                                               id="activityDescriptionId" list="activity_description">
+                                        <datalist id="activity_description">
+                                            <?php foreach ($activity_descriptions as $activity_description): ?>
+                                                <option id="<?= $activity_description['ID'] ?>"><?= $activity_description['DESCRIPTION'] ?></option>
+                                            <?php endforeach; ?>
+                                        </datalist>
                                     </div>
 
-                                    <div class="col-lg-4">
+                                    <div class="form-group col-lg-4">
+                                        <label for="datepicker">Tähtaeg:</label>
 
-                                        <h4>Seosed</h4>
-                                        <hr/>
+                                        <input type="text" class="form-control input-sm" id="datepicker"
+                                               placeholder="Tähtaeg">
 
-                                        <div class="form-group">
-                                            <input title="Vali 'Võidetud' tehingute seast" type="text"
-                                                   class="form-control" placeholder="Seosta tehinguga"
-                                                   id="transactionNameId" list="transaction_name">
-                                            <datalist id="transaction_name">
-                                                <?php foreach ($transactions as $transaction): ?>
-                                                    <option id="<?= $transaction['ID'] ?>"><?= $transaction['NAME'] ?></option>
-                                                <?php endforeach; ?>
-                                            </datalist>
-                                        </div>
+                                    </div>
+                                </div>
 
-                                        <h4>Määra vastutaja</h4>
-                                        <hr/>
+                                <div class="col-lg-4">
 
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Vastutaja"
-                                                   id="employeeId" list="employeeName">
-                                            <datalist id="employeeName">
-                                                <?php foreach ($employees as $employee): ?>
-                                                    <option id="<?= $employee['ID'] ?>"><?= $employee['FIRST_NAME'] . " " . $employee['LAST_NAME'] ?></option>
-                                                <?php endforeach; ?>
-                                            </datalist>
-                                        </div>
+                                    <h4>Seosed</h4>
+                                    <hr/>
+
+                                    <div class="form-group">
+                                        <input title="Vali 'Võidetud' tehingute seast" type="text"
+                                               class="form-control" placeholder="Seosta tehinguga"
+                                               id="transactionNameId" list="transaction_name">
+                                        <datalist id="transaction_name">
+                                            <?php foreach ($transactions as $transaction): ?>
+                                                <option id="<?= $transaction['ID'] ?>"><?= $transaction['NAME'] ?></option>
+                                            <?php endforeach; ?>
+                                        </datalist>
+                                    </div>
+
+                                    <h4>Määra vastutaja</h4>
+                                    <hr/>
+
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Vastutaja"
+                                               id="employeeId" list="employeeName">
+                                        <datalist id="employeeName">
+                                            <?php foreach ($employees as $employee): ?>
+                                                <option id="<?= $employee['ID'] ?>"><?= $employee['FIRST_NAME'] . " " . $employee['LAST_NAME'] ?></option>
+                                            <?php endforeach; ?>
+                                        </datalist>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button id="addTask" type="button" class="btn btn-success" data-dismiss="modal">
-                                    Salvesta
-                                </button>
-                                <button id="saveTaskAndAddNew" type="button" class="btn btn-basic">Salvesta ja lisa
-                                    uus
-                                </button>
-                            </div>
                         </div>
-
+                        <div class="modal-footer">
+                            <button id="addTask" type="button" class="btn btn-success" data-dismiss="modal">
+                                Salvesta
+                            </button>
+                            <button id="saveTaskAndAddNew" type="button" class="btn btn-basic">Salvesta ja lisa
+                                uus
+                            </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
-        <div class="row">
-
-            <div class="table-responsive">
-
-                <table class="table tablesorter results" id="tasksTable">
-
-                    <thead class="header" id="tableHeader">
-                    <tr title="Sorteeri tabelit veergude järgi">
-                        <th>Nimetus</th>
-                        <th>Vastutaja</th>
-                        <th>Seosta tehinguga</th>
-                        <th>Tähtaeg</th>
-                    </tr>
-
-                    <tr class="warning no-result">
-                        <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
-                    </thead>
-
-                    <tbody>
-
-                    <?php foreach ($activities as $activity): ?>
-                        <tr id="<?= $activity['ID'] ?>">
-                            <td class="activity_description" contenteditable><?= $activity['DESCRIPTION'] ?></td>
-                            <td class="employee_name"
-                            "<?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?>"
-                            contenteditable><?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?></td>
-                            <td class="transaction_name" contenteditable><?= $activity['NAME'] ?></td>
-                            <td class="date"
-                                contenteditable><?= date("d-m-Y", strtotime($activity['DEADLINE_DATE'])) ?></td>
-                            <td class="editAndDeleteTable">
-                                <a title="Kogu tegevuse kustutamine" class="deleteTableRow"><img
-                                            src="assets/img/icon-delete.png"/></a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-
-                    </tbody>
-
-                </table>
-
-
-            </div>
-        </div>
-
     </div>
 
-
-    <div class="column-r">
-
     </div>
-
-
 </div>
 
 <!-- add TASK SUCCESS-->
@@ -480,6 +482,8 @@
 
 </script>
 
+
+
 <script>
     $(".deleteTableRow").click(function () {
         var activity_id = $(this).parent().parent().attr('id');
@@ -506,6 +510,80 @@
         });
     });
 </script>
+
+
+<!-- pagination -->
+
+<script>
+    $(function () {
+        $("#tasksTable").hpaging({ "limit": 5 });
+
+
+    });
+
+    $("#pglmt").keyup(function() {
+        var lmt = $(this).val();
+        if(lmt == "" || lmt == "0"){
+            console.log("siin");
+        }else {
+            $("#tasksTable").hpaging("newLimit", lmt);
+        }
+    });
+</script>
+
+<!-- search from tasks table-->
+
+<script>
+
+    $(document).ready(function () {
+        $(".search").keyup(function () {
+            var searchTerm = $(".search").val();
+            var listItem = $('.results tbody').children('tr');
+            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+            $.extend($.expr[':'], {
+                'containsi': function (elem, i, match, array) {
+                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                }
+            });
+
+            $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'false');
+            });
+
+            $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'true');
+            });
+
+            var jobCount = $('.results tbody tr[visible="true"]').length;
+
+            if (jobCount == 1) {
+                $('.counter').text(jobCount + ' tulemus');
+
+            } else {
+                $('.counter').text(jobCount + ' tulemust');
+
+            }
+
+            if (jobCount == '0') {
+                $('.no-result').show();
+            }
+            else {
+                $('.no-result').hide();
+            }
+        });
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
 
 
 

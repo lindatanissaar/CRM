@@ -9,13 +9,46 @@
     .column-r {
         width: 35%;
         display: inline-block;
-        background-color: white;
-        padding: 30px;
     }
+
+    #daterangepicker {
+        background-color: #e7e7e7;
+        border-color: #e7e7e7;
+        text-align: center;
+        border-radius: 4px;
+        padding: 20px 4px 20px 4px;
+        display: inline-block;
+    }
+
+    #searchWonProjectsInput {
+        display: inline-block;
+    }
+
+    #bar {
+        width: 75%;
+        margin: auto;
+
+    }
+
+    #pie, #bar {
+        margin-bottom: 10%;
+    }
+
+    .bar, .pie {
+        background-color: white;
+    }
+
+    svg {
+        padding: 60px;
+    }
+
 
 </style>
 
 <link href="node_modules/pizza-master/dist/css/pizza.css" media="screen, projector, print" rel="stylesheet" type="text/css" />
+<script src="node_modules/moment/moment.js"></script>
+<script type="text/javascript" src="node_modules/daterangepicker/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="node_modules/daterangepicker/daterangepicker.css"/>
 
 <!-- search from table -->
 
@@ -70,10 +103,18 @@
 
 <div class="row">
     <div class="column-l">
+
+        <div class="katse">
             <div class="input-group">
-                <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
+                <input type="text" class="form-control input-md search" id="searchWonProjectsInput" placeholder="Otsi">
             </div>
             <span class="counter"></span>
+
+            <div class="input-group">
+                <input type="text" class="form-control input-md" id="daterangepicker">
+            </div>
+        </div>
+
     <h3>Võidetud tehingud</h3>
 
     <div class="table-responsive">
@@ -112,16 +153,31 @@
     </div>
 
     <div class="column-r">
-        <ul data-pie-id="my-cool-chart" data-options='{donut: "true", animation_speed: 200,
+        <div class="pie">
+            <ul data-pie-id="pie"data-options='{animation_speed: 200,
   animation_type: "backin"}'>
-            <li data-value="36">Võidetud tehingud</li>
-            <li data-value="14">Kokku</li>
-        </ul>
+                <li data-value="36">Võidetud tehingud</li>
+                <li data-value="14">Kokku</li>
+            </ul>
+            <div id="pie"></div>
+        </div>
 
-        <div id="my-cool-chart"></div>
+        <div class="bar">
+            <ul data-bar-id="bar">
+                <li data-value="36">Võidetud tehingud</li>
+                <li data-value="14">Kokku</li>
+            </ul>
+
+            <div class="large-8 small-8 columns">
+                <div id="bar" style="height: 250px;"></div>
+            </div>
+        </div>
     </div>
 
-</div>
+
+
+    </div>
+
 
 
 <script>
@@ -132,6 +188,131 @@
 
 
 </script>
+
+<script>
+
+    function applyDateRange() {
+
+        var startDate = $('#daterangepicker').data('daterangepicker').startDate._d;
+        var endDate = $('#daterangepicker').data('daterangepicker').endDate._d;
+
+        var dateFormatStart = GetDateFormat(startDate); // 07/05/2016
+        var dateFormatEnd = GetDateFormat(endDate); // 07/05/2016
+
+        dateStartDate = formatStringToDate(dateFormatStart);
+        dateEndDate = formatStringToDate(dateFormatEnd);
+
+        var count;
+
+        $(".table-responsive").find("tr").each(function () { //get all rows in table
+
+
+            var dateValue = $(this).find('.date').text();
+
+            dateValue = formatStringToDate(dateValue);
+
+            if (dateValue >= dateStartDate && dateValue <= dateEndDate) {
+                $(this).removeClass("displayNone");
+
+            } else {
+                $(this).addClass("displayNone");
+            }
+
+
+            if (!$(this).hasClass("displayNone")) {
+                count++;
+            }
+
+        })
+
+        if (count != 0){
+
+            $("#filterTableNoResults").show("slide", { direction: "right" }, 1000);
+
+            $("#filterTableNoResults").delay(1000);
+
+            $("#filterTableNoResults").hide("slide", { direction: "right" }, 1000);
+
+        }
+    }
+
+    function GetDateFormat(date) {
+        var month = (date.getMonth() + 1).toString();
+        month = month.length > 1 ? month : '0' + month;
+        var day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+        return day + '-' + month + '-' + date.getFullYear();
+    }
+
+    function formatStringToDate(dateString) {
+
+        var dateParts = dateString.split("-");
+
+        var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // month is 0-based
+
+        return dateObject;
+    }
+
+
+</script>
+
+<script>
+
+    $(function () {
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#daterangepicker').daterangepicker({
+            startDate: start,
+            endDate: end,
+
+            "locale": {
+                "format": "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Rakenda",
+                "cancelLabel": "Katkesta",
+                "fromLabel": "Alates",
+                "toLabel": "Kuni",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "P",
+                    "E",
+                    "T",
+                    "K",
+                    "N",
+                    "R",
+                    "L"
+                ],
+                "monthNames": [
+                    "Jaanuar",
+                    "Veebruar",
+                    "Märts",
+                    "Aprill",
+                    "Mai",
+                    "Juuni",
+                    "Juuli",
+                    "August",
+                    "September",
+                    "Oktoober",
+                    "November",
+                    "Detsember"
+                ],
+                "firstDay": 1
+            }
+
+        }, cb);
+
+        cb(start, end);
+
+
+    })
+
+</script>
+
 
 
 

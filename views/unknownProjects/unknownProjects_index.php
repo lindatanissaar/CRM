@@ -9,11 +9,43 @@
     .column-r {
         width: 35%;
         display: inline-block;
-        background-color: white;
-        padding: 30px;
     }
 
+    #daterangepicker {
+        background-color: #e7e7e7;
+        border-color: #e7e7e7;
+        text-align: center;
+        border-radius: 4px;
+        padding: 20px 4px 20px 4px;
+        display: inline-block;
+    }
+
+    #searchWonProjectsInput {
+        display: inline-block;
+    }
+
+    #bar {
+        width: 75%;
+        margin: auto;
+
+    }
+
+    #pie, #bar {
+        margin-bottom: 10%;
+    }
+
+    .bar, .pie {
+        background-color: white;
+    }
+
+    svg {
+        padding: 60px;
+    }
+
+
 </style>
+
+
 
 
 <link href="node_modules/pizza-master/dist/css/pizza.css" media="screen, projector, print" rel="stylesheet" type="text/css" />
@@ -78,7 +110,7 @@
         <span class="counter"></span>
 
 
-    <h3>Kaotatud tehingud</h3>
+    <h3>Pole teada tehingud</h3>
 
     <div class="table-responsive">
 
@@ -115,13 +147,25 @@
 
 </div>
     <div class="column-r">
-        <ul data-pie-id="my-cool-chart2" data-options='{donut: "true", animation_speed: 200,
+        <div class="pie">
+            <ul data-pie-id="pie"data-options='{animation_speed: 200,
   animation_type: "backin"}'>
-            <li data-value="36">Pole teada tehingud</li>
-            <li data-value="14">Kokku</li>
-        </ul>
+                <li data-value="36">Pole teada tehingud</li>
+                <li data-value="14">Kokku</li>
+            </ul>
+            <div id="pie"></div>
+        </div>
 
-        <div id="my-cool-chart2"></div>
+        <div class="bar">
+            <ul data-bar-id="bar">
+                <li data-value="36">Pole teada tehingud</li>
+                <li data-value="14">Kokku</li>
+            </ul>
+
+            <div class="large-8 small-8 columns">
+                <div id="bar" style="height: 250px;"></div>
+            </div>
+        </div>
     </div>
 
 </div>

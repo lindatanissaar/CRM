@@ -53,6 +53,15 @@
             padding: 30px;
         }
 
+        .content {
+            width: 90%;
+            background-color: white;
+            padding: 30px;
+            margin: auto;
+            margin-top: 5%;
+
+        }
+
         .column-r {
             width: 8%;
             display: inline-block;
@@ -530,6 +539,8 @@
 <script src="vendor/components/jqueryui/jquery-ui.min.js?<?=COMMIT_HASH?>"></script>
 <!-- tablesorter JS -->
 
+
+
 <script type="text/javascript" src="assets/js/jquery.tablesorter.min.js"></script>
 
 <script src="node_modules/pizza-master/dist/js/pizza.js"></script>
@@ -537,10 +548,16 @@
 <script src="node_modules/pizza-master/dist/js/vendor/dependencies.js"></script>
 <script src="node_modules/pizza-master/js/pizza/pie.js"></script>
 <script src="node_modules/pizza-master/js/pizza/line.js"></script>
+<script src="node_modules/pizza-master/js/pizza/bar.js"></script>
+
+
+
 
 
 
 <script src="assets/js/main.js?<?=COMMIT_HASH?>"></script>
+
+
 </body>
 </html>
 <?php require 'system/error_translations.php' ?>
