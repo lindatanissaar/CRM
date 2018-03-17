@@ -42,6 +42,55 @@
         padding: 60px;
     }
 
+    /* pagination */
+    .pagination {
+        display: inline-block;
+        margin: 0;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 5px 9px;
+        text-decoration: none;
+    }
+
+    .pagination a.active {
+        background-color: #38B87C;
+        color: white;
+    }
+
+    .pagination a:hover:not(.active) { background-color: #ddd; }
+
+    #btnApplyPagination {
+        background-color: #dc4d5d;
+        border-color: #dc4d5d;
+    }
+
+    #pg_unknownProjects {
+        float: right;
+    }
+
+    .form-group {
+        display: inline-block;
+    }
+
+    #pglmt {
+        width:20%;
+        text-align: center;
+    }
+
+    #pglmtLabel, #pglmt {
+        display: inline-block;
+    }
+
+    .pglmt {
+        text-align: center;
+    }
+    .pageLimit {
+        float: right;
+    }
+
 
 </style>
 
@@ -49,10 +98,13 @@
 
 
 <link href="node_modules/pizza-master/dist/css/pizza.css" media="screen, projector, print" rel="stylesheet" type="text/css" />
+<script src="node_modules/table-paging/jquery.table.hpaging.js"></script>
+
 
 <script>
     $(document).ready(function () {
         $(".search").keyup(function () {
+            $('.paginationResults').text("");
             var searchTerm = $(".search").val();
             var listItem = $('.results tbody').children('tr');
             var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
@@ -80,6 +132,16 @@
                 $('.counter').text(jobCount + ' tulemust');
             }
 
+            if($("#searchTasksInput").val()== ""){
+                $(".counter").text("");
+                var numOfVisibleRows = $('tbody tr:visible').length;
+
+                var allResults = $('tbody tr').length;
+
+                $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
+
+            }
+
             if (jobCount == '0') {
                 $('.no-result').show();
             }
@@ -104,15 +166,23 @@
 
     <div class="column-l">
 
-        <div class="input-group">
-            <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
-        </div>
-        <span class="counter"></span>
+
 
 
     <h3>Pole teada tehingud</h3>
 
     <div class="table-responsive">
+        <div class="input-group">
+            <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
+        </div>
+        <span class="counter"></span>
+        <div class="pageLimit">
+            <div class="form-group pglmt">
+                <label id="pglmtLabel" for="pglmt">Näita: </label>
+                <input id="pglmt" title="Ridade arv"  value="5" class="form-control input-sm">
+                <div class="paginationResults"></div>
+            </div>
+        </div>
 
         <table class="table tablesorter results"  id="unknownProjects">
 
@@ -169,6 +239,31 @@
     </div>
 
 </div>
+
+<!-- pagination -->
+
+<script>
+    $(function () {
+        $("#unknownProjects").hpaging({ "limit": 5 });
+    });
+
+    $("#pglmt").keyup(function() {
+        var lmt = $(this).val();
+        if(lmt == "" || lmt == "0"){
+            console.log("siin");
+        }else {
+            $("#unknownProjects").hpaging("newLimit", lmt);
+        }
+
+        var numOfVisibleRows = $('tbody tr:visible').length;
+
+        var allResults = $('tbody tr').length;
+
+        $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
+
+    });
+
+</script>
 
 
 <script>

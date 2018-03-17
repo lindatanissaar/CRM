@@ -403,6 +403,17 @@
             display: inline-block !important;
         }
 
+        .paginationResults {
+            padding:8px;
+            color:#303030;
+            display: inline-block !important;
+        }
+
+        #pglmtLabel {
+            font-weight: 500;
+            color: #303030;
+        }
+
         .search {
             display: inline-block !important;
             background: url(assets/img/icon-search.png) no-repeat scroll 7px 7px;

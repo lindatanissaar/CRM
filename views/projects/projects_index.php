@@ -56,14 +56,25 @@
     .pglmt {
         text-align: center;
     }
-
     .pageLimit {
         float: right;
     }
 
+
+
+    /* fixed table headers */
+
+
 </style>
 
 <script src="node_modules/table-paging/jquery.table.hpaging.js"></script>
+
+
+
+
+<script>
+
+</script>
 
 <script>
 
@@ -130,6 +141,7 @@
                 <div class="form-group pglmt">
                     <label id="pglmtLabel" for="pglmt">Näita: </label>
                     <input id="pglmt" title="Ridade arv"  value="5" class="form-control input-sm">
+                    <div class="paginationResults"></div>
                 </div>
 
             </div>
@@ -730,6 +742,13 @@ $("#saveAndAddNew").click(function () {
         }else {
             $("#transactionsTable").hpaging("newLimit", lmt);
         }
+
+        var numOfVisibleRows = $('tbody tr:visible').length;
+
+        var allResults = $('tbody tr').length;
+
+        $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
+
     });
 
 </script>
@@ -737,6 +756,7 @@ $("#saveAndAddNew").click(function () {
 <script>
     $(document).ready(function() {
         $(".search").keyup(function () {
+            $('.paginationResults').text("");
             var searchTerm = $(".search").val();
             var listItem = $('.results tbody').children('tr');
             var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
@@ -758,9 +778,21 @@ $("#saveAndAddNew").click(function () {
 
             if (jobCount == 1){
                 $('.counter').text(jobCount + ' tulemus');
+                $(".paginationResults").css("display", "none");
 
             }else {
                 $('.counter').text(jobCount + ' tulemust');
+
+
+            }
+
+            if($("#searchTransactionInput").val()== ""){
+                $(".counter").text("");
+                var numOfVisibleRows = $('tbody tr:visible').length;
+
+                var allResults = $('tbody tr').length;
+
+                $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
 
             }
 

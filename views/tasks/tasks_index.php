@@ -136,6 +136,7 @@
                 <div class="form-group pglmt">
                     <label id="pglmtLabel" for="pglmt">Näita: </label>
                     <input id="pglmt" title="Ridade arv"  value="5" class="form-control input-sm">
+                    <div class="paginationResults"></div>
                 </div>
             </div>
 
@@ -528,6 +529,12 @@
         }else {
             $("#tasksTable").hpaging("newLimit", lmt);
         }
+
+        var numOfVisibleRows = $('tbody tr:visible').length;
+
+        var allResults = $('tbody tr').length;
+
+        $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
     });
 </script>
 
@@ -537,6 +544,7 @@
 
     $(document).ready(function () {
         $(".search").keyup(function () {
+            $('.paginationResults').text("");
             var searchTerm = $(".search").val();
             var listItem = $('.results tbody').children('tr');
             var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
@@ -562,6 +570,16 @@
 
             } else {
                 $('.counter').text(jobCount + ' tulemust');
+
+            }
+
+            if($("#searchTasksInput").val()== ""){
+                $(".counter").text("");
+                var numOfVisibleRows = $('tbody tr:visible').length;
+
+                var allResults = $('tbody tr').length;
+
+                $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
 
             }
 
