@@ -63,7 +63,6 @@ class Transaction
     }
 
     static function getContactPersonName($organisation_name) {
-
         $organisation_name = htmlspecialchars($organisation_name);
         $organisation_id = get_first("SELECT ID FROM organisation WHERE ORGANISATION_NAME = '{$organisation_name}'");
         $organisation_id  = json_encode($organisation_id);

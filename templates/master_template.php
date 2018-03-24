@@ -41,9 +41,33 @@
             background-color: #F8F8F8;
         }
 
+        .btn-basic {
+            background-color: transparent;
+            border-color: transparent;
+            font-weight: 600;
+        }
+
         .btn-success {
             background-color: #38B87C;
             border-color: #38B87C;
+            -webkit-transition: background-color 1s, border-color 1s ; /* Safari */
+            transition: background-color 1s, border-color 1s;
+        }
+
+        .btn-success:hover {
+            background-color: #2c9363;
+            border-color: #2c9363;
+        }
+
+        .btn-success:focus {
+            background-color: #2c9363;
+            border-color: #2c9363;
+            outline: none;
+        }
+
+        .btn-success:active {
+            background-color: #2c9363;
+            border-color: #2c9363;
         }
 
         .column-l {
@@ -51,6 +75,8 @@
             display: inline-block;
             background-color: white;
             padding: 30px;
+            box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+
         }
 
         .content {
@@ -59,6 +85,12 @@
             padding: 30px;
             margin: auto;
             margin-top: 5%;
+            box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+
+        }
+
+        .pie, .bar {
+            box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
 
         }
 
@@ -92,8 +124,8 @@
             width: 100%;
             height: 100%;
             z-index: 9999;
-            background: url('assets/img/icon-loader.gif') 50% 50% no-repeat rgb(249, 249, 249);
-            opacity: .90;
+            background: url('assets/img/icon-loader.gif') 50% 50% no-repeat rgb(128, 128, 128);
+            opacity: .98;
         }
 
         .row {
@@ -135,7 +167,26 @@
 
         /* transaction modal*/
 
-        /*success (saved) modal*/
+        #name {
+            font-size: 14px;
+        }
+
+        h4 {
+            font-size: 14px;
+            color: hsl(0, 0%, 13%);
+            font-weight: 700;
+        }
+
+        label {
+            font-weight: 600;
+            color: hsl(0, 0%, 29%);
+
+        }
+
+        .right-side {
+            margin-top: 50px;
+        }
+
 
         #addTransactionSuccessBody {
             color: white;
@@ -148,6 +199,11 @@
             padding: 5px 15px;
             font-weight: bold;
             text-align: center;
+        }
+
+        .form-control {
+            box-shadow: none;
+            border-color: #e7e7e7;
         }
 
         .form-control:focus {
@@ -217,12 +273,12 @@
         }
 
         .modal-header {
-            background-color: #eee;
+            background-color: hsl(220, 12%, 95%);
             border-bottom: none;
         }
 
         .modal-footer {
-            background-color: #F0F0F0;
+            background-color: hsl(220, 12%, 95%);
             border-top: none;
         }
 
@@ -296,7 +352,7 @@
             font-weight: 500;
         }
 
-        .phone, .date, .price {
+        .price {
             text-align: right;
             background-position: left center !important;
 
@@ -515,17 +571,6 @@
     </div>
 </nav>
 
-<!--
-
-<div class="row">
-    <div class="column-left"></div>
-    <div class="column-right">
-        <div id="filterTableNoResults">
-            <h4>Tulemused puuduvad</h4>
-        </div>
-    </div>
-</div> -->
-
 <div class="container">
 
 
@@ -545,21 +590,19 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-
 <script src="vendor/components/bootstrap/js/bootstrap.min.js?<?=COMMIT_HASH?>"></script>
 <script src="vendor/components/jqueryui/jquery-ui.min.js?<?=COMMIT_HASH?>"></script>
-<!-- tablesorter JS -->
-
-
-
 <script type="text/javascript" src="assets/js/jquery.tablesorter.min.js"></script>
-
 <script src="node_modules/pizza-master/dist/js/pizza.js"></script>
 <script src="node_modules/pizza-master/dist/js/vendor/modernizr.js"></script>
 <script src="node_modules/pizza-master/dist/js/vendor/dependencies.js"></script>
 <script src="node_modules/pizza-master/js/pizza/pie.js"></script>
 <script src="node_modules/pizza-master/js/pizza/line.js"></script>
 <script src="node_modules/pizza-master/js/pizza/bar.js"></script>
+
+<script src="node_modules/js-cookie/src/js.cookie.js"></script>
+
+
 
 
 

@@ -1,13 +1,12 @@
 <style>
 
-
     #searchTasksInput {
         padding-right: 10%;
     }
 
     #daterangepicker {
-        background-color: #e7e7e7;
-        border-color: #e7e7e7;
+        background-color: white;
+        border: 3px solid #e7e7e7;
         text-align: center;
         border-radius: 4px;
         padding: 20px 4px 20px 4px;
@@ -97,9 +96,15 @@
 
 <script>
     $(document).ready(function () {
-            $("#tasksTable").tablesorter({dateFormat: 'pt'});
+
+        var i = $("td.date").index();
+
+        $("#tasksTable").tablesorter({
+                dateFormat: 'pt',
+                sortList: [[i,0]]
+            });
         }
-    );
+    )
 </script>
 
 
@@ -114,18 +119,19 @@
                     data-keyboard="true"
                     data-target="#myModal">Lisa tegevus
             </button>
+
+            <a title="Muuda tabeli veerge"><img id="changeTableColumns" src="assets/img/icon-add.png"/></a>
         </div>
 
         <div class="column-right">
             <div class="input-group">
-                <input type="text" class="form-control input-md" id="daterangepicker">
+                <input type="text" class="form-control input-sm" id="daterangepicker">
             </div>
         </div>
 
     </div>
 
     <div class="row">
-
         <div class="table-responsive">
             <div class="input-group">
                 <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
@@ -144,27 +150,27 @@
 
                 <thead class="header" id="tableHeader">
                 <tr title="Sorteeri tabelit veergude järgi">
-                    <th>Nimetus</th>
-                    <th>Vastutaja</th>
-                    <th>Seosta tehinguga</th>
-                    <th>Tähtaeg</th>
+                    <th class="activityDescription">Nimetus</th>
+                    <th class="employeeName">Vastutaja</th>
+                    <th class="taskTransactionName">Seosta tehinguga</th>
+                    <th class="date">Tähtaeg</th>
                 </tr>
 
                 <tr class="warning no-result">
                     <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
                 </thead>
 
-                <tbody>
+                <tbody class="tasksTableBody">
 
                 <?php foreach ($activities as $activity): ?>
                     <tr id="<?= $activity['ID'] ?>">
-                        <td class="activity_description" contenteditable><?= $activity['DESCRIPTION'] ?></td>
-                        <td class="employee_name"
+                        <td class="activityDescription" contenteditable><?= $activity['DESCRIPTION'] ?></td>
+                        <td class="employeeName"
                         "<?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?>"
                         contenteditable><?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?></td>
-                        <td class="transaction_name" contenteditable><?= $activity['NAME'] ?></td>
+                        <td class="taskTransactionName" contenteditable><?= $activity['NAME'] ?></td>
                         <td class="date"
-                            contenteditable><?= date("d-m-Y", strtotime($activity['DEADLINE_DATE'])) ?></td>
+                            contenteditable><?= date("d/m/Y", strtotime($activity['DEADLINE_DATE'])) ?></td>
                         <td class="editAndDeleteTable">
                             <a title="Kogu tegevuse kustutamine" class="deleteTableRow"><img
                                         src="assets/img/icon-delete.png"/></a>
@@ -198,8 +204,8 @@
                                     <div class="form-group">
                                         <input type="text" class="form-control col-lg-8"
                                                placeholder="Tegevuse nimetus"
-                                               id="activityDescriptionId" list="activity_description">
-                                        <datalist id="activity_description">
+                                               id="activityDescriptionId" list="activityDescription">
+                                        <datalist id="activityDescription">
                                             <?php foreach ($activity_descriptions as $activity_description): ?>
                                                 <option id="<?= $activity_description['ID'] ?>"><?= $activity_description['DESCRIPTION'] ?></option>
                                             <?php endforeach; ?>
@@ -223,8 +229,8 @@
                                     <div class="form-group">
                                         <input title="Vali 'Võidetud' tehingute seast" type="text"
                                                class="form-control" placeholder="Seosta tehinguga"
-                                               id="transactionNameId" list="transaction_name">
-                                        <datalist id="transaction_name">
+                                               id="transactionNameId" list="taskTransactionNameDatalist">
+                                        <datalist id="taskTransactionNameDatalist">
                                             <?php foreach ($transactions as $transaction): ?>
                                                 <option id="<?= $transaction['ID'] ?>"><?= $transaction['NAME'] ?></option>
                                             <?php endforeach; ?>
@@ -337,6 +343,8 @@
 
 </script>
 
+
+
 <!-- picker -->
 
 <script src="node_modules/moment/moment.js"></script>
@@ -362,19 +370,24 @@
 
     function applyDateRange() {
 
+        var dateStartDate = $('#daterangepicker').data('daterangepicker').startDate;
+        var dateEndDate = $('#daterangepicker').data('daterangepicker').endDate;
+
         var startDate = $('#daterangepicker').data('daterangepicker').startDate._d;
         var endDate = $('#daterangepicker').data('daterangepicker').endDate._d;
 
-        var dateFormatStart = GetDateFormat(startDate); // 07/05/2016
-        var dateFormatEnd = GetDateFormat(endDate); // 07/05/2016
+
+
+        var dateFormatStart = GetDateFormat(startDate);
+        var dateFormatEnd = GetDateFormat(endDate);
 
         dateStartDate = formatStringToDate(dateFormatStart);
         dateEndDate = formatStringToDate(dateFormatEnd);
 
         var count;
 
-        $(".table-responsive").find("tr").each(function () { //get all rows in table
 
+        $(".tasksTableBody").find("tr").each(function () { //get all rows in table
 
             var dateValue = $(this).find('.date').text();
 
@@ -410,12 +423,12 @@
         month = month.length > 1 ? month : '0' + month;
         var day = date.getDate().toString();
         day = day.length > 1 ? day : '0' + day;
-        return day + '-' + month + '-' + date.getFullYear();
+        return day + '/' + month + '/' + date.getFullYear();
     }
 
     function formatStringToDate(dateString) {
 
-        var dateParts = dateString.split("-");
+        var dateParts = dateString.split("/");
 
         var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // month is 0-based
 
@@ -429,8 +442,14 @@
 <script>
 
     $(function () {
-        var start = moment().subtract(29, 'days');
-        var end = moment();
+
+        var start;
+        var end;
+
+        start = moment().subtract(29, 'days');
+
+        end = moment();
+
 
         function cb(start, end) {
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -538,6 +557,83 @@
     });
 </script>
 
+<script>
+
+
+    $("#changeTableColumns").click(function () {
+        if (Cookies.get('activityDescription') == "none") {
+            $("#taskName").prop('checked', false);
+        } else {
+            $("#taskName").prop('checked', true);
+        }
+
+        if (Cookies.get('employeeName') == "none") {
+            $("#supervisor").prop('checked', false);
+        } else {
+            $("#supervisor").prop('checked', true);
+        }
+
+        if (Cookies.get('taskTransactionName') == "none") {
+            $("#transaction").prop('checked', false);
+        } else {
+            $("#transaction").prop('checked', true);
+        }
+
+        if (Cookies.get('taskDate') == "none") {
+            $("#taskDate").prop('checked', false);
+        } else {
+            $("#taskDate").prop('checked', true);
+        }
+
+        $('#changeTableColumnsModal').modal('show');
+    })
+</script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="changeTableColumnsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Vali tabeli väljad</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="taskName">
+                    <label class="form-check-label" for="taskName">
+                        Nimetus
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="supervisor">
+                    <label class="form-check-label" for="supervisor">
+                        Vastutaja
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="transaction">
+                    <label class="form-check-label" for="transaction">
+                        Seosta tehinguga
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="taskDate">
+                    <label class="form-check-label" for="taskDate">
+                        Tähtaeg
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- search from tasks table-->
 
 <script>
@@ -593,6 +689,92 @@
     });
 
 </script>
+
+<!-- hide/show table columns -->
+
+<script>
+
+    $(function () {
+        if (Cookies.get('taskTransactionName') == "none") {
+            $(".taskTransactionName").hide();
+        } else {
+            $(".taskTransactionName").show();
+        }
+
+        if (Cookies.get('activityDescription') == "none") {
+            $(".activityDescription").hide();
+        } else {
+            $(".activityDescription").show();
+        }
+
+        if (Cookies.get('employeeName') == "none") {
+            $(".employeeName").hide();
+        } else {
+            $(".employeeName").show();
+        }
+
+        if (Cookies.get('taskDate') == "none") {
+            $(".date").hide();
+        } else {
+            $(".date").show();
+        }
+
+        $("#taskName").blur(function () {
+            if ($("#taskName").is(":checked")) {
+                $(".activityDescription").show();
+                Cookies.set('activityDescription', 'display');
+
+
+
+            } else {
+                $(".activityDescription").hide();
+                Cookies.set('activityDescription', 'none');
+
+            }
+        })
+
+    })
+
+        $("#supervisor").blur(function () {
+            if ($("#supervisor").is(":checked")) {
+                $(".employeeName").show();
+                Cookies.set('employeeName', 'display');
+
+            } else {
+                $(".employeeName").hide();
+                Cookies.set('employeeName', 'none');
+
+            }
+        })
+
+        $("#transaction").blur(function () {
+            if ($("#transaction").is(":checked")) {
+                $(".taskTransactionName").show();
+                Cookies.set('taskTransactionName', 'display');
+
+
+            } else {
+                $(".taskTransactionName").hide();
+                Cookies.set('taskTransactionName', 'none');
+            }
+        })
+
+        $("#taskDate").blur(function () {
+            if ($("#taskDate").is(":checked")) {
+                $(".date").show();
+                Cookies.set('taskDate', 'display');
+
+
+            } else {
+                $(".date").hide();
+                Cookies.set('taskDate', 'none');
+
+
+            }
+        })
+
+</script>
+
 
 
 

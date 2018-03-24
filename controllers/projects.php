@@ -19,12 +19,10 @@ class projects extends Controller
     }
 
 
-
     function AJAX_addTransaction()
     {
         // controls transaction parameters
         if (isset($_POST["name"]) && isset($_POST["price"]) && isset($_POST["organisation_name"])&& isset($_POST["contact_person_name"])&& isset($_POST["email"])&& isset($_POST["deadline_date"])&& isset($_POST["telephone"]) && isset($_POST["status"]) && isset($_POST["note"])) {
-
             // uses Transaction class
             Transaction_Model::addTransaction($_POST["name"], $_POST["price"], $_POST["organisation_name"], $_POST["contact_person_name"], $_POST["email"], $_POST["deadline_date"], $_POST["telephone"], $_POST["status"], $_POST["note"]);
             exit("success");
@@ -38,14 +36,7 @@ class projects extends Controller
 
             $contact_person = json_encode($contact_person);
 
-            //$json = json_decode($contact_person, true);
-
-
-
-            //$contact_person = $json['CONTACT_PERSON_NAME'];
-
             exit($contact_person);
-
         }
     }
 
@@ -54,13 +45,11 @@ class projects extends Controller
             q("DELETE FROM transaction WHERE ID = '" . $_POST["transaction_id"] . "'");
 
             exit("success");
-
         }
     }
 
     function AJAX_editTableRow(){
         if(isset($_POST["transaction_id"])){
-
             $transaction_id = $_POST["transaction_id"];
 
             $transactions2 = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ID = '{$transaction_id}' AND transaction.ORGANISATION_ID = organisation.ID AND transaction.CONTACT_PERSON_ID = contact_person.ID");
