@@ -70,6 +70,13 @@
             border-color: #2c9363;
         }
 
+        .addTaskButton {
+            background-color: #CDD5D1;
+            border: #CDD5D1;
+            color: #000;
+            margin-left: 10px;
+        }
+
         .column-l {
             width: 90%;
             display: inline-block;
@@ -86,12 +93,10 @@
             margin: auto;
             margin-top: 5%;
             box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
-
         }
 
         .pie, .bar {
             box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
-
         }
 
         .column-r {
@@ -180,7 +185,6 @@
         label {
             font-weight: 600;
             color: hsl(0, 0%, 29%);
-
         }
 
         .right-side {

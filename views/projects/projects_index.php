@@ -20,7 +20,7 @@
     .pagination a {
         color: black;
         float: left;
-        padding: 5px 9px;
+        padding: 3px 9px;
         text-decoration: none;
     }
 
@@ -46,12 +46,12 @@
         display: inline-block;
     }
 
-    #pglmt {
+    #pglmtTransaction {
         width: 20%;
         text-align: center;
     }
 
-    #pglmtLabel, #pglmt {
+    #pglmtLabel, #pglmtTransaction {
         display: inline-block;
     }
 
@@ -69,15 +69,10 @@
         cursor: all-scroll;
     }
 
-
-
 </style>
 
 
 <script src="node_modules/table-paging/jquery.table.hpaging.js"></script>
-
-
-
 
 <script>
 
@@ -141,11 +136,10 @@
 
             <div class="pageLimit">
                 <div class="form-group pglmt">
-                    <label id="pglmtLabel" for="pglmt">Näita: </label>
-                    <input id="pglmt" title="Ridade arv" value="5" class="form-control input-sm">
+                    <label id="pglmtLabel" for="pglmtTransaction">Näita: </label>
+                    <input id="pglmtTransaction" title="Ridade arv" value="5" class="form-control input-sm">
                     <div class="paginationResults"></div>
                 </div>
-
             </div>
 
             <table class="table tablesorter results table-fixed" id="transactionsTable">
@@ -792,13 +786,23 @@
 
 <script>
     $(function () {
-        $("#transactionsTable").hpaging({"limit": 5});
+        var lmt = Cookies.get('transactionLimit');
+        if(lmt == undefined){
+            $("#transactionsTable").hpaging({"limit": 5});
+        }else {
+            $("#transactionsTable").hpaging({"limit": lmt});
+        }
+
+        if(lmt != undefined){
+            $('#pglmtTransaction').attr('value', lmt);
+        }
+
+
     });
 
-    $("#pglmt").keyup(function () {
+    $("#pglmtTransaction").keyup(function () {
         var lmt = $(this).val();
         if (lmt == "" || lmt == "0") {
-            console.log("siin");
         } else {
             $("#transactionsTable").hpaging("newLimit", lmt);
         }
@@ -809,6 +813,14 @@
 
         $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
 
+    });
+
+    $("#pglmtTransaction").blur(function () {
+        var lmt = $(this).val();
+        if (lmt == "" || lmt == "0") {
+        } else {
+            Cookies.set('transactionLimit', lmt);
+        }
     });
 
 </script>
