@@ -11,6 +11,7 @@ namespace App;
 
 class Admin
 {
+
     static function addTaskName($activityDescription)
     {
         $activityDescription = htmlspecialchars($activityDescription);

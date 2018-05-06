@@ -20,7 +20,7 @@
         margin-top: 10px;
     }
 
-    #searchWonProjectsInput {
+    #searchLostProjectsInput {
         display: inline-block;
     }
 
@@ -67,7 +67,7 @@
         border-color: #dc4d5d;
     }
 
-    #pg_lostProjects {
+    #pg_completedProjects {
         float: right;
     }
 
@@ -100,6 +100,9 @@
 <link rel="stylesheet" type="text/css" href="node_modules/daterangepicker/daterangepicker.css"/>
 <script src="node_modules/table-paging/jquery.table.hpaging.js"></script>
 
+
+<!-- search from table -->
+
 <script>
     $(document).ready(function () {
         $(".search").keyup(function () {
@@ -131,7 +134,7 @@
                 $('.counter').text(jobCount + ' tulemust');
             }
 
-            if($("#searchTasksInput").val()== ""){
+            if($("#searchLostProjectsInput").val()== ""){
                 $(".counter").text("");
                 var numOfVisibleRows = $('tbody tr:visible').length;
 
@@ -151,66 +154,81 @@
     });
 </script>
 
+<!-- Table sort default by date -->
 
+<script>
+    $(document).ready(function () {
+
+        var i = $("td.date").index();
+
+        $("#completedProjects").tablesorter({
+            dateFormat: 'pt',
+            sortList: [[i, 0]]
+        });
+    })
+
+</script>
 
 <div class="row">
-
     <div class="column-l">
 
-        <h3>Kaotatud tehingud</h3>
+        <h3>Võidetud/lõpetatud tehingud</h3>
 
-    <div class="table-responsive">
-        <div class="input-group">
-            <input type="text" class="form-control input-md" id="daterangepicker">
-        </div>
-        <div class="input-group">
-            <input type="text" class="form-control input-md search" id="searchTasksInput" placeholder="Otsi">
-        </div>
-        <span class="counter"></span>
-        <div class="pageLimit">
-            <div class="form-group pglmt">
-                <label id="pglmtLabel" for="pglmt">Näita: </label>
-                <input id="pglmt" title="Ridade arv"  value="5" class="form-control input-sm">
-                <div class="paginationResults"></div>
+        <div class="table-responsive">
+
+
+            <div class="input-group">
+                <input type="text" class="form-control input-md" id="daterangepicker">
             </div>
-        </div>
 
-        <table class="table tablesorter results"  id="lostProjects">
+            <div class="input-group">
+                <input type="text" class="form-control input-md search" id="searchLostProjectsInput" placeholder="Otsi">
+            </div>
+            <span class="counter"></span>
 
-            <thead  class="header" id="tableHeader">
-            <tr title="Sorteeri tabelit veergude järgi">
-                <th>Ettevõtte nimetus</th>
-                <th>Tehingu nimetus</th>
-                <th class="price">Väärtus</th>
-                <th class="date">Tähtaeg</th>
-                <th>Märkus</th>
-            </tr>
+            <div class="pageLimit">
+                <div class="form-group pglmt">
+                    <label id="pglmtLabel" for="pglmt">Näita: </label>
+                    <input id="pglmt" title="Ridade arv"  value="5" class="form-control input-sm">
+                    <div class="paginationResults"></div>
+                </div>
+            </div>
 
-            <tr class="warning no-result">
-                <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
+            <table class="table tablesorter results"  id="completedProjects">
 
-            </thead>
-
-            <tbody>
-
-            <?php foreach ($transactions as $transaction): ?>
-                <tr id="<?= $transaction['ID'] ?>">
-                    <td class="organisation_name" contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
-                    <td class="transaction_name" contenteditable><?= $transaction['NAME'] ?></td>
-                    <td class="price" contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
-                    <td class="date"
-                        contenteditable><?= date("d/m/Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
-                    <td class="note" contenteditable><?= $transaction['NOTE'] ?></td>
+                <thead  class="header" id="tableHeader">
+                <tr title="Sorteeri tabelit veergude järgi">
+                    <th>Ettevõtte nimetus</th>
+                    <th>Tehingu nimetus</th>
+                    <th class="price">Väärtus</th>
+                    <th class="date">Tähtaeg</th>
+                    <th>Märkus</th>
                 </tr>
-            <?php endforeach; ?>
 
-            </tbody>
+                <tr class="warning no-result">
+                    <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
+                </thead>
 
-        </table>
+                <tbody>
+
+                <?php foreach ($transactions as $transaction): ?>
+                    <tr id="<?= $transaction['ID'] ?>">
+                        <td class="organisation_name" contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
+                        <td class="transaction_name" contenteditable><?= $transaction['NAME'] ?></td>
+                        <td class="price" contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
+                        <td class="date"
+                            contenteditable><?= date("d/m/Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
+                        <td class="note" contenteditable><?= $transaction['NOTE'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
-
-</div>
 
     <div class="column-r">
         <div class="pie">
@@ -266,49 +284,14 @@
             </div>
         </div>
     </div>
+
+
+
 </div>
 
 
-<!-- pagination -->
 
-<script>
 
-    $(function () {
-        var lmt = Cookies.get('lostProjectsLimit');
-        console.log(lmt);
-        if (lmt == undefined) {
-            $("#lostProjects").hpaging({"limit": 5});
-        } else {
-            $("#lostProjects").hpaging({"limit": lmt});
-        }
-
-        if (lmt != undefined) {
-            $('#pglmt').attr('value', lmt);
-        }
-    });
-
-    $("#pglmt").keyup(function () {
-        var lmt = $(this).val();
-        if (lmt == "" || lmt == "0") {
-        } else {
-            $("#lostProjects").hpaging("newLimit", lmt);
-        }
-
-        var numOfVisibleRows = $('tbody tr:visible').length;
-
-        var allResults = $('tbody tr').length;
-
-        $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
-    });
-
-    $("#pglmt").blur(function () {
-        var lmt = $(this).val();
-        if (lmt == "" || lmt == "0") {
-        } else {
-            Cookies.set('lostProjectsLimit', lmt);
-        }
-    });
-</script>
 
 <script>
 
@@ -335,7 +318,7 @@
         dateStart = getDateFormatMysql(dateStartDate);
         dateEnd = getDateFormatMysql(dateEndDate);
 
-        $.post("lostProjects/changeTable", {
+        $.post("completedProjects/changeTable", {
             dateStart: dateStart,
             dateEnd: dateEnd
         }).done(function (data) {
@@ -347,32 +330,6 @@
                 console.log("pole korras");
             }
         });
-
-
-
-
-        /*
-
-         var count;
-
-
-         $("#wonProjectsTableBody").find("tr").each(function () { //get all rows in table
-
-         var dateValue = $(this).find('.date').text();
-
-         dateValue = formatStringToDate(dateValue);
-
-         if (dateValue >= dateStartDate && dateValue <= dateEndDate) {
-         $(this).removeClass("displayNone");
-
-         }else{
-         $(this).addClass("displayNone");
-         }
-
-         if (!$(this).hasClass("displayNone")) {
-         count++;
-         }
-         }) */
     }
 
     function GetDateFormat(date) {
@@ -415,7 +372,7 @@
 <script>
 
     $(function () {
-        if(Cookies.get("dateStartLostProjects") == undefined || Cookies.get("dateEndLostProjects")== undefined){
+        if(Cookies.get("dateStartCompletedProjects") == undefined || Cookies.get("dateEndCompletedProjects")== undefined){
             console.log("siin");
             start = moment().subtract(46, 'days');
             end = moment().add(46, 'days');
@@ -424,8 +381,8 @@
             }
         }else {
             console.log("siin2");
-            start = Cookies.get("dateStartLostProjects");
-            end = Cookies.get("dateEndLostProjects");
+            start = Cookies.get("dateStartCompletedProjects");
+            end = Cookies.get("dateEndCompletedProjects");
             console.log(start);
             console.log(end);
             start = formatDate(start);
@@ -481,19 +438,47 @@
 </script>
 
 
-
-<!-- Table sort default by date -->
+<!-- pagination -->
 
 <script>
-    $(document).ready(function () {
 
-        var i = $("td.date").index();
+    $(function () {
+        var lmt = Cookies.get('completedProjectsLimit');
+        console.log(lmt);
+        if (lmt == undefined) {
+            $("#completedProjects").hpaging({"limit": 5});
+        } else {
+            $("#completedProjects").hpaging({"limit": lmt});
+        }
 
-        $("#lostProjects").tablesorter({
-            dateFormat: 'pt',
-            sortList: [[i, 0]]
-        });
-    })
+        if (lmt != undefined) {
+            $('#pglmt').attr('value', lmt);
+        }
+    });
 
+    $("#pglmt").keyup(function () {
+        var lmt = $(this).val();
+        if (lmt == "" || lmt == "0") {
+        } else {
+            $("#completedProjects").hpaging("newLimit", lmt);
+        }
+
+        var numOfVisibleRows = $('tbody tr:visible').length;
+
+        var allResults = $('tbody tr').length;
+
+        $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
+    });
+
+    $("#pglmt").blur(function () {
+        var lmt = $(this).val();
+        if (lmt == "" || lmt == "0") {
+        } else {
+            Cookies.set('completedProjectsLimit', lmt);
+        }
+    });
 </script>
+
+
+
 

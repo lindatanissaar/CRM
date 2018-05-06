@@ -5,6 +5,7 @@ use App\Admin as Admin_Model;
 
 class admins extends Controller
 {
+    public $template = 'admins';
 
     function index()
     {

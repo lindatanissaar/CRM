@@ -40,14 +40,12 @@ class tasks extends Controller
             q("UPDATE activity SET DEL_DATETIME_ACTIVITY = NOW() WHERE ID = '{$activity_id}'");
 
             exit("success");
-
-
-
         }
     }
 
     function AJAX_updateTaskTable(){
         if(isset($_POST['data']['activityDescription'])) {
+            error_log("siin");
             $activityDescription = $_POST['data']['activityDescription'];
             $activityDescription = json_decode($activityDescription);
              foreach ($activityDescription as $key => $value) {

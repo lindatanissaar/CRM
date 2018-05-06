@@ -12,12 +12,12 @@
     }
 
     #daterangepicker {
-        background-color: #e7e7e7;
-        border-color: #e7e7e7;
+        background-color: white;
+        border: 1px solid #e7e7e7;
         text-align: center;
         border-radius: 4px;
-        padding: 20px 4px 20px 4px;
-        display: inline-block;
+        margin-bottom: 15px;
+        margin-top: 10px;
     }
 
     #searchWonProjectsInput {
@@ -87,10 +87,14 @@
     .pglmt {
         text-align: center;
     }
+
     .pageLimit {
         float: right;
     }
 
+    .displayNone {
+        display: none;
+    }
 
 </style>
 
@@ -154,19 +158,11 @@
     });
 </script>
 
-<!-- sort table -->
-
-<script>
-    $(document).ready(function () {
-            $("#wonProjects").tablesorter({dateFormat: 'pt'});
-        }
-    );
-</script>
 
 <div class="row">
     <div class="column-l">
 
-    <h3>Võidetud tehingud</h3>
+    <h3>Võidetud/töös tehingud</h3>
 
     <div class="table-responsive">
 
@@ -195,6 +191,7 @@
                 <th>Ettevõtte nimetus</th>
                 <th>Tehingu nimetus</th>
                 <th class="price">Väärtus</th>
+                <th class="date">Tähtaeg</th>
                 <th>Märkus</th>
             </tr>
 
@@ -202,13 +199,15 @@
                 <td colspan="1"><i class="fa fa-warning"></i>Tulemused puuduvad</td>
             </thead>
 
-            <tbody>
+            <tbody id="wonProjectsTableBody">
 
             <?php foreach ($transactions as $transaction): ?>
                 <tr id="<?= $transaction['ID'] ?>">
                     <td class="organisation_name" contenteditable><?= $transaction['ORGANISATION_NAME'] ?></td>
                     <td class="transaction_name" contenteditable><?= $transaction['NAME'] ?></td>
                     <td class="price" contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
+                    <td class="date"
+                        contenteditable><?= date("d/m/Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
                     <td class="note" contenteditable><?= $transaction['NOTE'] ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -225,16 +224,49 @@
         <div class="pie">
             <ul data-pie-id="pie"data-options='{animation_speed: 200,
   animation_type: "backin"}'>
-                <li data-value="36">Võidetud tehingud</li>
-                <li data-value="14">Kokku</li>
+                <?php foreach ($wonProjects as $wonProject): ?>
+
+                <li id="wonProject" data-value="<?= (int)$wonProject['wonProjectsNumber'] ?>">Võidetud/töös tehingud (<?= (int)$wonProject['wonProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
+
+                <?php foreach ($completedProjects as $completedProject): ?>
+                <li data-value="<?= (int)$completedProject['completedProjectsNumber'] ?>">Võidetud/lõpetatud tehingud (<?= (int)$completedProject['completedProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
+
+                <?php foreach ($lostProjects as $lostProject): ?>
+
+                <li data-value="<?= (int)$lostProject['lostProjectsNumber'] ?>">Kaotatud tehingud (<?= (int)$lostProject['lostProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
+
+                <?php foreach ($unknownProjects as $unknownProject): ?>
+
+                <li data-value="<?= (int)$unknownProject['unknownProjectsNumber'] ?>">Pole teada tehingud (<?= (int)$unknownProject['unknownProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
+
             </ul>
             <div id="pie"></div>
         </div>
 
         <div class="bar">
             <ul data-bar-id="bar">
-                <li data-value="36">Võidetud tehingud</li>
-                <li data-value="14">Kokku</li>
+                <?php foreach ($wonProjects as $wonProject): ?>
+
+                    <li id="wonProjects" data-value="<?= (int)$wonProject['wonProjectsNumber'] ?>">Võidetud/töös tehingud (<?= (int)$wonProject['wonProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
+
+                <?php foreach ($completedProjects as $completedProject): ?>
+                    <li data-value="<?= (int)$completedProject['completedProjectsNumber'] ?>">Võidetud/lõpetatud tehingud (<?= (int)$completedProject['completedProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
+
+                <?php foreach ($lostProjects as $lostProject): ?>
+
+                    <li data-value="<?= (int)$lostProject['lostProjectsNumber'] ?>">Kaotatud tehingud (<?= (int)$lostProject['lostProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
+
+                <?php foreach ($unknownProjects as $unknownProject): ?>
+
+                    <li data-value="<?= (int)$unknownProject['unknownProjectsNumber'] ?>">Pole teada tehingud (<?= (int)$unknownProject['unknownProjectsNumber'] ?>)</li>
+                <?php endforeach; ?>
             </ul>
 
             <div class="large-8 small-8 columns">
@@ -242,14 +274,7 @@
             </div>
         </div>
     </div>
-
-
-
     </div>
-
-
-
-
 
 <script>
 
@@ -257,6 +282,19 @@
         Pizza.init();
     })
 
+</script>
+
+<!-- Table sort default by date -->
+
+<script>
+
+    $(document).ready(function () {
+        var i = $("td.date").index();
+        $("#wonProjects").tablesorter({
+            dateFormat: 'pt',
+            sortList: [[i, 0]]
+        });
+    })
 
 </script>
 
@@ -267,44 +305,27 @@
         var startDate = $('#daterangepicker').data('daterangepicker').startDate._d;
         var endDate = $('#daterangepicker').data('daterangepicker').endDate._d;
 
-        var dateFormatStart = GetDateFormat(startDate); // 07/05/2016
-        var dateFormatEnd = GetDateFormat(endDate); // 07/05/2016
+        var dateFormatStart = GetDateFormat(startDate);
+        var dateFormatEnd = GetDateFormat(endDate);
 
         dateStartDate = formatStringToDate(dateFormatStart);
         dateEndDate = formatStringToDate(dateFormatEnd);
 
-        var count;
+        dateStart = getDateFormatMysql(dateStartDate);
+        dateEnd = getDateFormatMysql(dateEndDate);
 
-        $(".table-responsive").find("tr").each(function () { //get all rows in table
-
-
-            var dateValue = $(this).find('.date').text();
-
-            dateValue = formatStringToDate(dateValue);
-
-            if (dateValue >= dateStartDate && dateValue <= dateEndDate) {
-                $(this).removeClass("displayNone");
+        $.post("wonProject/changeTable", {
+            dateStart: dateStart,
+            dateEnd: dateEnd
+        }).done(function (data) {
+            if (data == "success") {
+                console.log("korras");
+                location.reload();
 
             } else {
-                $(this).addClass("displayNone");
+                console.log("pole korras");
             }
-
-
-            if (!$(this).hasClass("displayNone")) {
-                count++;
-            }
-
-        })
-
-        if (count != 0){
-
-            $("#filterTableNoResults").show("slide", { direction: "right" }, 1000);
-
-            $("#filterTableNoResults").delay(1000);
-
-            $("#filterTableNoResults").hide("slide", { direction: "right" }, 1000);
-
-        }
+        });
     }
 
     function GetDateFormat(date) {
@@ -312,17 +333,34 @@
         month = month.length > 1 ? month : '0' + month;
         var day = date.getDate().toString();
         day = day.length > 1 ? day : '0' + day;
-        return day + '-' + month + '-' + date.getFullYear();
+        return day + '/' + month + '/' + date.getFullYear();
+    }
+
+    function getDateFormatMysql(date){
+        var month = (date.getMonth() + 1).toString();
+        month = month.length > 1 ? month : '0' + month;
+        var day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+        return date.getFullYear() + '-' + month + '-' + day;
     }
 
     function formatStringToDate(dateString) {
 
-        var dateParts = dateString.split("-");
+        var dateParts = dateString.split("/");
 
         var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // month is 0-based
 
         return dateObject;
     }
+
+    function formatDate (input) {
+        var datePart = input.match(/\d+/g),
+            year = datePart[0].substring(2), // get only two digits
+            month = datePart[1], day = datePart[2];
+
+        return day+'/'+month+'/'+year;
+    }
+
 
 
 </script>
@@ -330,17 +368,25 @@
 <script>
 
     $(function () {
-        var start = moment().subtract(29, 'days');
-        var end = moment();
-
-        function cb(start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        if(Cookies.get("dateStartWonProjects") == undefined || Cookies.get("dateEndWonProjects")== undefined){
+            start = moment().subtract(46, 'days');
+            end = moment().add(46, 'days');
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+        }else {
+            start = Cookies.get("dateStartWonProjects");
+            end = Cookies.get("dateEndWonProjects");
+            start = formatDate(start);
+            end = formatDate(end);
+            function cb(start, end) {
+                $('#reportrange span').html(start + ' - ' + end);
+            }
         }
 
         $('#daterangepicker').daterangepicker({
             startDate: start,
             endDate: end,
-
             "locale": {
                 "format": "DD/MM/YYYY",
                 "separator": " - ",
@@ -374,28 +420,40 @@
                 ],
                 "firstDay": 1
             }
-
         }, cb);
 
         cb(start, end);
 
-
     })
 
+
 </script>
+
 
 <!-- pagination -->
 
 <script>
+
     $(function () {
-        $("#wonProjects").hpaging({ "limit": 5 });
+        var lmt = Cookies.get('wonProjectsLimit');
+        console.log(lmt);
+        if (lmt == undefined) {
+            $("#wonProjects").hpaging({"limit": 5});
+        } else {
+            $("#wonProjects").hpaging({"limit": lmt});
+        }
+
+        if (lmt != undefined) {
+            $('#pglmt').attr('value', lmt);
+        }
+
+
     });
 
-    $("#pglmt").keyup(function() {
+    $("#pglmt").keyup(function () {
         var lmt = $(this).val();
-        if(lmt == "" || lmt == "0"){
-            console.log("siin");
-        }else {
+        if (lmt == "" || lmt == "0") {
+        } else {
             $("#wonProjects").hpaging("newLimit", lmt);
         }
 
@@ -404,10 +462,19 @@
         var allResults = $('tbody tr').length;
 
         $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
-
     });
 
+    $("#pglmt").blur(function () {
+        var lmt = $(this).val();
+        if (lmt == "" || lmt == "0") {
+        } else {
+            Cookies.set('wonProjectsLimit', lmt);
+        }
+    });
 </script>
+
+
+
 
 
 

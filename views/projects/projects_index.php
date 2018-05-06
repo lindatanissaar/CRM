@@ -69,6 +69,10 @@
         cursor: all-scroll;
     }
 
+    .status {
+        width: 15%;
+    }
+
 </style>
 
 
@@ -78,21 +82,21 @@
 
     $(document).ready(function () {
         $(".status").each(function () {
-            if ($(this).text() == "STATUS_WON") {
+            if ($(this).text() == "Võidetud") {
                 $(this).removeClass("status_won");
                 $(this).removeClass("status_lost");
                 $(this).removeClass("status_unknown");
                 $(this).addClass("status_won");
             }
 
-            if ($(this).text() == "STATUS_LOST") {
+            if ($(this).text() == "Kaotatud") {
                 $(this).removeClass("status_won");
                 $(this).removeClass("status_lost");
                 $(this).removeClass("status_unknown");
                 $(this).addClass("status_lost");
             }
 
-            if ($(this).text() == "STATUS_UNKNOWN") {
+            if ($(this).text() == "Pole teada") {
                 $(this).removeClass("status_won");
                 $(this).removeClass("status_lost");
                 $(this).removeClass("status_unknown");
@@ -115,7 +119,11 @@
     <div class="row">
 
         <div class="column-left">
-            <button type="button" class="btn btn-success" data-focus="false" data-toggle="modal" data-keyboard="true"
+
+            <button type="button" id="updateTransactionTable" class="btn btn-success" data-focus="false" data-toggle="modal"
+                    data-keyboard="true">Salvesta
+            </button>
+            <button type="button" class="btn btn-basic addTransactionButton" data-focus="false" data-toggle="modal" data-keyboard="true"
                     data-target="#myModal">Lisa tehing
             </button>
 
@@ -164,6 +172,15 @@
                 <tbody>
 
                 <?php foreach ($transactions as $transaction): ?>
+                    <?php if($transaction['STATUS'] == "STATUS_WON"){
+                        $STATUS = "Võidetud";
+                    } elseif ($transaction['STATUS'] == "STATUS_UNKNOWN") {
+                        $STATUS = "Pole teada";
+                    }else {
+                        $STATUS = "Kaotatud";
+                    }
+
+                    ?>
                     <tr id="<?= $transaction['ID'] ?>">
                         <td class="transactionName" contenteditable><?= $transaction['NAME'] ?></td>
                         <td class="price" contenteditable><?= round($transaction['PRICE'], 2) . " €" ?></td>
@@ -173,10 +190,10 @@
                         <td class="phone" contenteditable><?= $transaction['PHONE'] ?></td>
                         <td class="date"
                             contenteditable><?= date("d/m/Y", strtotime($transaction['DEADLINE_DATE'])) ?></td>
-                        <td class="status" contenteditable><span><?= $transaction['STATUS'] ?></span></td>
+                        <td class="status" contenteditable><span><?= $STATUS ?></span></td>
                         <td class="note" contenteditable><?= $transaction['NOTE'] ?></td>
                         <td class="editAndDeleteTable">
-                            <a title="Tehingu hulgimuutmine" class="editTableRow"><img src="assets/img/icon-edit.png"/></a>
+                            <a title="Märgi tehing lõpetatuks" class="transactionCompletedIcon"><img src="assets/img/icon-completed.png"/></a>
                             <a title="Kogu tehingu kustutamine" class="deleteTableRow"><img
                                         src="assets/img/icon-delete.png"/></a>
                         </td>
@@ -300,7 +317,7 @@
 
 </div>
 
-<!-- Table -->
+<!-- Table sort default by date -->
 
 <script>
     $(document).ready(function () {
@@ -447,27 +464,7 @@
         });
     });
 
-    // edit table row
 
-
-    $(".editTableRow").click(function () {
-        var transaction_id = $(this).parent().parent().attr('id');
-        $.post("projects/editTableRow", {
-            transaction_id: transaction_id
-        }).done(function (data) {
-            if (data) {
-                data = JSON.parse(data);
-                console.log(data[0]);
-                $("#name").text(data[0].NAME);
-            } else {
-
-                console.log("pole korras");
-            }
-
-            $('#editTableRowModal').modal('show');
-
-        })
-    });
 
 </script>
 
@@ -673,112 +670,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- editTableRowModal -->
-
-<div class="modal fade" id="editTableRowModal" role="dialog" tabindex="-1">
-    <div class="vertical-alignment-helper">
-        <div class="modal-lg vertical-align-center">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Muuda tehingut</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-body row">
-                        <div class="col-lg-8">
-                            <div class="col-lg-12">
-                                <div class="form-group col-lg-8">
-                                    <input id="name" placeholder="Tehingu nimetus" class="form-control input-lg">
-                                </div>
-                            </div>
-
-
-                            <div class="col-lg-12">
-                                <div class="form-group col-lg-4">
-                                    <label for="price">Hind:</label>
-                                    <input type="text" class="form-control input-sm" id="price" placeholder=""
-                                           value="<?= $transactions2['ID'] ?>">
-                                </div>
-
-                                <div class="form-group col-lg-4">
-                                    <label for="datepicker">Tähtaeg:</label>
-                                    <input type="text" class="form-control input-sm" id="datepicker" placeholder="">
-                                </div>
-
-                                <div class="col-lg-3">
-                                    <label for="status">Staatus:</label>
-
-                                    <div class="form-group">
-                                        <select name="item-0-status" id="id_item-0-status"
-                                                class="form-control input-sm">
-                                            <option value="STATUS_UNKNOWN">Pole teada</option>
-                                            <option value="STATUS_WON">Võidetud</option>
-                                            <option value="STATUS_LOST">Kaotatud</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <div class="form-group col-lg-10">
-                                    <label for="note">Märkus:</label>
-                                    <textarea class="form-control" rows="6" id="note"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-
-                            <h4>Seosed</h4>
-
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Seosta ettevõttega"
-                                       id="organisationNameId" list="organisationName">
-                                <datalist id="organisationName">
-                                    <?php foreach ($organisations as $organisation): ?>
-                                        <option id="<?= $organisation['ID'] ?>"><?= $organisation['ORGANISATION_NAME'] ?></option>
-                                    <?php endforeach; ?>
-                                </datalist>
-                            </div>
-
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Seosta isikuga"
-                                       id="contactPersonNameId" list="contactPersonName">
-                                <datalist id="contactPersonName">
-                                    <?php foreach ($contact_persons as $contact_person): ?>
-                                        <option id="<?= $contact_person['ID'] ?>"><?= $contact_person['CONTACT_PERSON_NAME'] ?></option>
-                                    <?php endforeach; ?>
-                                </datalist>
-                            </div>
-
-                            <h4>Kontaktandmed</h4>
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="text" class="form-control input-sm" id="email" placeholder="">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="telephone">Telefon:</label>
-                                <input type="text" class="form-control input-sm" id="telephone" placeholder="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="addTransaction" type="button" class="btn btn-success" data-dismiss="modal">
-                        Muuda
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
 </div>
 
 
@@ -1062,7 +953,122 @@
 
 </script>
 
+<!-- edit table data -->
 
+<script>
+
+    $(function () {
+        var transactionName = {};
+        var price = {};
+        var organisationName = {};
+        var email = {};
+        var phone = {};
+        var date = {};
+        var status = {};
+        var note = {};
+        $('.transactionName').each(function () {
+            $(this).blur(function () {
+                transactionName[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        })
+
+        $('.price').each(function () {
+            $(this).blur(function () {
+                price[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        });
+
+        $('.organisationName').each(function () {
+            $(this).blur(function () {
+                organisationName[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        });
+
+        $('.phone').each(function () {
+            $(this).blur(function () {
+                phone[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        });
+
+        $('.date').each(function () {
+            $(this).blur(function () {
+                date[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        });
+
+        $('.status').each(function () {
+            $(this).blur(function () {
+                status[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        });
+
+        $('.note').each(function () {
+            $(this).blur(function () {
+                note[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        });
+
+        $('#updateTransactionTable').click(function () {
+            activityDescription = JSON.stringify(activityDescription);
+            taskTransactionName = JSON.stringify(taskTransactionName);
+            employeeName = JSON.stringify(employeeName);
+            date = JSON.stringify(date);
+            // make $.post query
+            $.post("tasks/updateTaskTable", {
+                data: {activityDescription: activityDescription,
+                    taskTransactionName: taskTransactionName,
+                    date: date,
+                    employeeName: employeeName
+                }
+            }).done(function (data) {
+                if (data == "success") {
+                    console.log("korras");
+                    location.reload();
+                    $('#deleteTransactionSuccess').modal('show');
+                    $('body').click(function () {
+                        location.reload();
+                    })
+
+                } else {
+                    console.log("pole korras");
+                    $('body').click(function () {
+                        location.reload();
+                    })
+                }
+            });
+        });
+    })
+
+
+</script>
+
+
+<!-- mark transaction completed -->
+<script>
+
+    $(".transactionCompletedIcon").click(function(){
+        var completedTransactionId = $(this).parent().parent().attr('id');
+
+        $.post("projects/markTransactionCompleted", {
+            completedTransactionId: completedTransactionId
+        }).done(function (data) {
+            if (data == "success") {
+                location.reload();
+            } else {
+                console.log("mingi error");
+            }
+        });
+    });
+
+
+</script>
 
 
 

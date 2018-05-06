@@ -83,10 +83,6 @@
         text-align: left;
     }
 
-    .opacitySaveButton {
-        opacity: 0.5;
-    }
-
 
 </style>
 
@@ -140,24 +136,26 @@
         </div>
 
         <div class="column-right">
-            <button type="button" id="updateTaskTable" class="btn btn-success" data-focus="false" data-toggle="modal"
-                    data-keyboard="true">Salvesta
-            </button>
 
-            <button type="button" class="btn btn-success addTaskButton" data-focus="false" data-toggle="modal"
+            <a title="Muuda tabeli veerge"><img id="changeTableColumns" src="assets/img/icon-add.png"/></a>
+
+
+
+            <button type="button" class="btn btn-basic addTaskButton" data-focus="false" data-toggle="modal"
                     data-keyboard="true"
                     data-target="#myModal">Lisa tegevus
             </button>
 
-            <a title="Muuda tabeli veerge"><img id="changeTableColumns" src="assets/img/icon-add.png"/></a>
+            <button type="button" id="updateTaskTable" class="btn btn-success" data-focus="false" data-toggle="modal"
+                    data-keyboard="true">Salvesta
+            </button>
+
         </div>
 
     </div>
 
     <div class="row">
         <div class="table-responsive">
-
-
             <div class="pageLimit">
                 <div class="form-group pglmt">
                     <label id="pglmtLabel" for="pglmtTask">Näita: </label>
@@ -201,6 +199,7 @@
                 </tbody>
 
             </table>
+
 
         </div>
 
@@ -419,6 +418,9 @@
             var dateValue = $(this).find('.date').text();
 
             dateValue = formatStringToDate(dateValue);
+            console.log(dateStartDate);
+            console.log(dateEndDate);
+            console.log(dateValue);
 
             if (dateValue >= dateStartDate && dateValue <= dateEndDate) {
                 $(this).removeClass("displayNone");
@@ -472,12 +474,8 @@
 
         var start;
         var end;
-
         start = moment().subtract(29, 'days');
-
         end = moment();
-
-
         function cb(start, end) {
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }

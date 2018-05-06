@@ -9,7 +9,7 @@ class projects extends Controller
         $this->projects = get_all("SELECT * FROM projects");
         $this->organisations = get_all("SELECT * FROM organisation");
         $this->contact_persons = get_all("SELECT * FROM contact_person");
-        $this->transactions = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID");
+        $this->transactions = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID AND transaction.COMPLETED = 0");
     }
 
     function view()
@@ -55,6 +55,16 @@ class projects extends Controller
             $transactions2 = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ID = '{$transaction_id}' AND transaction.ORGANISATION_ID = organisation.ID AND transaction.CONTACT_PERSON_ID = contact_person.ID");
             exit(json_encode($transactions2));
         }
+    }
+
+    function AJAX_markTransactionCompleted(){
+        if(isset($_POST["completedTransactionId"])){
+            $completedTransactionId = $_POST["completedTransactionId"];
+            q("UPDATE transaction SET COMPLETED = 1 WHERE ID = '{$completedTransactionId}'");
+
+            exit("success");
+        }
+
     }
 }
 

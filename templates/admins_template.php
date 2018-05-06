@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
 
 
+
+
+
+
     <style>
         body {
             padding-top: 70px;
@@ -66,21 +70,12 @@
             border-color: #2c9363;
         }
 
-        .addTaskButton, .addTransactionButton {
+        .addTaskButton {
             background-color: #CDD5D1;
             border: #CDD5D1;
-            color: white;
+            color: #000;
             margin-left: 10px;
         }
-
-        #updateTaskTable, #updateTransactionTable {
-            opacity: 0.5;
-        }
-
-        .opacitySaveButton {
-            opacity: 1 !important;
-        }
-
 
         .column-l {
             width: 90%;
@@ -110,7 +105,25 @@
         }
 
         .container {
-            width: 85%;
+            width: 100%;
+            padding: 0;
+        }
+
+        .navbar-collapse {
+
+        }
+
+        ul {
+            margin-bottom: 0;
+        }
+
+        li.last {
+            margin-bottom: 0;
+        }
+
+        .container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header {
+            margin-left: 7.5%;
+            margin-right: 7.5%;
         }
 
         .nav.navbar-nav {
@@ -119,11 +132,11 @@
 
         .navbar-default {
             border: none;
-            background-color: #F0F0F0;
+            background-color: #f0f0f0;
         }
 
         .navbar-default .navbar-nav>.active>a {
-            background-color: #F0F0F0;
+            background-color: #f0f0f0;
             font-weight: bold;
         }
 
@@ -322,7 +335,6 @@
             padding-left:30px;
         }
 
-
         /*TABLE *>
         /* table sorting CSS*/
 
@@ -347,107 +359,6 @@
             background-color: #eee;
             background-size: 18px;
 
-        }
-
-        /* table css*/
-
-        .table {
-            font-family: Verdana;
-        }
-
-        th.header {
-            border-right: 0;
-            color: grey;
-            font-weight: 500;
-        }
-
-        .price {
-            text-align: right;
-            background-position: left center !important;
-
-        }
-
-        .table>tbody>tr>td {
-            padding: 16px;
-            border-top: 1px solid #eee;
-        }
-
-        .editAndDeleteTable {
-            border-top: 0 !important;
-        }
-
-
-        .table>thead>tr>th {
-            border-bottom: 3px solid #eee;
-            padding: 16px;
-        }
-
-        .table>thead:first-child>tr:first-child>th {
-            border-top: 3px solid #eee;
-
-        }
-
-        .editAndDeleteTable, .date, .phone {
-            width: 10%;
-        }
-
-        .organisation_name, .note {
-            width: 15%;
-        }
-
-
-        .transactionCompletedIcon {
-            -webkit-filter: grayscale(100%);
-            opacity: 0.2;
-        }
-
-        .transactionCompletedIcon:hover {
-            -webkit-filter: grayscale(0%);
-            opacity: 1;
-
-            -webkit-transition: all 0.2s ease;
-            -moz-transition: all 0.2s ease;
-            -o-transition: all 0.2s ease;
-            -ms-transition: all 0.2s ease;
-            transition: all 0.2s ease;
-        }
-
-        .deleteTableRow {
-            -webkit-filter: grayscale(100%);
-            opacity: 0.2;
-        }
-
-        .deleteTableRow:hover {
-            -webkit-filter: grayscale(0%);
-            opacity: 1;
-
-            -webkit-transition: all 0.2s ease;
-            -moz-transition: all 0.2s ease;
-            -o-transition: all 0.2s ease;
-            -ms-transition: all 0.2s ease;
-            transition: all 0.2s ease;
-        }
-
-        /* table statuses*/
-
-        .status_won span {
-            background-color: #38B87C;
-            padding: 5px 10px 5px 10px;
-            border-radius: 4px;
-            color: white;
-        }
-
-        .status_lost span {
-            background-color: #f6ccd1;
-            padding: 5px 10px 5px 10px;
-            border-radius: 4px;
-            color: #dc4d5d;
-        }
-
-        .status_unknown span {
-            background-color: #CDD5D1;
-            padding: 5px 10px 5px 10px;
-            border-radius: 4px;
         }
 
 
@@ -500,37 +411,164 @@
             margin: 0;
         }
 
-        /*  pie style */
-        ul[data-pie-id] {
-            padding-top: 60px !important;
-            padding-left: 30px !important;
-        }
+             /*sidebar menu*/
+         #cssmenu {
+             background: white;
+             list-style: none;
+             margin: 0;
+             padding: 0;
+             width: 25em;
+            /* -webkit-box-shadow: 0 10px 6px -6px #777;
+             -moz-box-shadow: 0 10px 6px -6px #777;
+             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+         }
 
-        ul[data-pie-id] li{
-            padding: 8px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        ul[data-bar-id] {
-            padding-top: 60px !important;
-            padding-left: 30px !important;
-        }
-
-        ul[data-bar-id] li{
-            padding: 8px;
-            font-size: 14px;
-            font-weight: bold;
+        #cssmenu li {
+            margin: 0;
+            padding: 10px;
             list-style: none;
         }
 
+        #cssmenu a {
+           /* background:  white;
+            border-bottom: 1px solid white;*/
+            color: #666;
+            display: block;
+            margin: 0;
+            padding: 10px 14px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
 
+        #cssmenu a:hover {
+            color: #dc4d5d;
+            padding-bottom: 10px;
+            background-color: #F8F8F8;
+        }
+
+        #cssmenu li {
+            background:  white;
+            color: #666;
+            display: block;
+            margin: 0;
+            padding: 10px 14px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        #cssmenu li:hover {
+            background: white url("assets/img/hover.gif") left center no-repeat;
+            color: #dc4d5d;
+            padding-bottom: 10px;
+            background-color: #F8F8F8;
+        }
+
+        .row {
+            background-color: white;
+        }
+
+        #adminArea, #cssmenu {
+            display: inline-block;
+        }
+
+        .modal-backdrop {
+            background: none;
+        }
+
+        .modal-content {
+            box-shadow: none;
+            border: none;
+            float: right;
+        }
+
+        .modal-lg {
+            top:10%;
+            left: 10%;
+            outline: none;
+        }
+
+        .modal-footer {
+            background-color: white;
+            padding: 15px;
+            text-align: right;
+            border-top: 1px solid white;
+            margin-top: 50px;
+        }
+
+        select.input-sm {
+            color: black;
+        }
+
+        #taskName, #taskName:focus, #firstName, #firstName:focus, #lastName, #lastName:focus  {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            box-shadow: none;
+            border-bottom: solid 2px #d4d4d4;
+            border-radius: 0;
+        }
+
+        #firstName, #lastName {
+            display: inline-block;
+            width: 40%;
+            margin: 2%;
+        }
+
+        .activity_desc, .employees {
+            padding: 8px;
+            background-color: #F8F8F8;
+            width: 30%;
+            margin: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            background-color: white;
+            border-color: white;
+        }
+
+        .activity_desc, .deleteTaskName, .employees{
+            display: inline-block;
+        }
+
+        .deleteTaskName, .deleteEmployee {
+            float: right;
+            -webkit-filter: grayscale(100%);
+            opacity: 0.1;
+        }
+
+        .deleteTaskName:hover, .deleteEmployee:hover {
+            -webkit-filter: grayscale(0%);
+            opacity: 1;
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        a:focus {
+            outline: none;
+        }
+
+        li a:hover {
+            cursor: pointer;
+        }
+
+        .active {
+            background: white url("assets/img/hover.gif") left center no-repeat !important;
+            color: #dc4d5d !important;
+            padding-bottom: 10px !important;
+            background-color: #F8F8F8 !important;
+        }
 
 
     </style>
-
-
-
 
     <!-- jQuery -->
     <script src="vendor/components/jquery/jquery.min.js?<?=COMMIT_HASH?>"></script>
@@ -554,8 +592,6 @@
     }, 1000);  // 5 seconds
 </script>
 
-
-
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -577,10 +613,10 @@
 
                     <a href="statistics" class="dropdown-toggle account-section" data-toggle="dropdown">Statistika<b class="caret"></b></>
                     <ul class="dropdown-menu">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="wonProject">Võidetud/töös pojektid</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="wonProject">Võidetud pojektid</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="lostProjects">Kaotatud pojektid </a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="unknownProjects">Pole teada pojektid</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="completedProjects">Võidetud/lõpetatud pojektid</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="completedProjects">Lõpetatud pojektid</a></li>
                     </ul>
                 </li>
             </ul>
@@ -610,11 +646,10 @@
 
 
 
-
     <!-- Main component for a primary marketing message or call to action -->
     <?php if (!file_exists("views/$controller/{$controller}_$action.php")) error_out('The view <i>views/' . $controller . '/' . $controller . '_' . $action . '.php</i> does not exist. Create that file.'); ?>
     <?php @require "views/$controller/{$controller}_$action.php"; ?>
-    
+
 </div>
 <!-- /container -->
 
@@ -626,22 +661,9 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="vendor/components/bootstrap/js/bootstrap.min.js?<?=COMMIT_HASH?>"></script>
 <script src="vendor/components/jqueryui/jquery-ui.min.js?<?=COMMIT_HASH?>"></script>
-<script type="text/javascript" src="assets/js/jquery.tablesorter.min.js"></script>
-<script src="node_modules/pizza-master/dist/js/pizza.js"></script>
-<script src="node_modules/pizza-master/dist/js/vendor/modernizr.js"></script>
-<script src="node_modules/pizza-master/dist/js/vendor/dependencies.js"></script>
-<script src="node_modules/pizza-master/js/pizza/pie.js"></script>
-<script src="node_modules/pizza-master/js/pizza/line.js"></script>
-<script src="node_modules/pizza-master/js/pizza/bar.js"></script>
 
-<script src="node_modules/js-cookie/src/js.cookie.js"></script>
-
-
-
-
-
-
-
+<script src="node_modules/moment/moment.js"></script>
+<script src="node_modules/pikaday/pikaday.js"></script>
 
 <script src="assets/js/main.js?<?=COMMIT_HASH?>"></script>
 
