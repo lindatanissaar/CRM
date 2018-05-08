@@ -69,7 +69,7 @@
 
             <div class="right">
                 <div class="form-group">
-                    <input title="Vali 'Võidetud' tehingute seast" type="text"
+                    <input title="Vali võidetud ja lõpetamata tehingute seast" type="text"
                            class="form-control input-lg" placeholder="Seosta tehinguga"
                            id="transactionNameId" list="transaction_name">
                     <datalist id="transaction_name">
@@ -126,17 +126,8 @@
 
                 $('#addTaskSuccess').modal('show');
 
-                $('body').click(function () {
-                    location.reload();
-                })
-
-
             } else {
-                console.log("pole korras");
-
-
-                $('#addTransactionError').modal('show');
-
+                $('#addTaskError').modal('show');
             }
         });
     })
@@ -154,6 +145,32 @@
             format: 'DD/MM/YYYY'
         });
 </script>
+
+
+<!-- MODALS -->
+
+<!-- addTaskError -->
+
+
+<div id="addTaskError" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA tegevuse lisamisel</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tegevuse lisamisel esines viga. Saad lisada ainult olemasolevaid väärtusi.</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

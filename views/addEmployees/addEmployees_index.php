@@ -105,21 +105,54 @@
             employeeId: employeeId
         }).done(function (data) {
             if (data == "success") {
-                console.log("korras");
-                $('#deleteTaskNameSuccess').modal('show');
-                $('body').click(function () {
+                $('#deleteEmployeeSuccess').modal('show');
                     location.reload();
-                })
 
+            } else if (data == "notEmpty") {
+                $('#deleteEmployeeErrorNotEmpty').modal('show');
 
-            } else {
-                console.log("pole korras");
-                $('body').click(function () {
-                    location.reload();
-                })
             }
         });
     });
 
 </script>
+
+
+<!-- MODALS -->
+
+<!-- deleteEmployeeErrorNotEmpty -->
+
+
+<div id="deleteEmployeeErrorNotEmpty" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA töötaja kustutamisel</h4>
+            </div>
+            <div class="modal-body">
+                <p>Töötajat ei saa kustutada. Töötaja on seotud tegevusega.</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- deleteEmployeeSuccess  -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteEmployeeSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body modal-body-delete-success">
+                <h3>Kustutatud</h3>
+                <h4>Töötaja on kustutatud.</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
 

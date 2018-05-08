@@ -37,28 +37,43 @@ class admins extends Controller
 
     function AJAX_deleteTaskDesc() {
         if(isset($_POST["taskDescId"])){
-            q("DELETE FROM activity_description WHERE ID = '" . $_POST["taskDescId"] . "'");
 
-            exit("success");
+            $activityTaskDescId = $_POST["taskDescId"];
+
+            $activityTaskDescIdResult = get_all("SELECT * FROM activity WHERE DESCRIPTION_ID = '{$activityTaskDescId}'");
+
+
+            if(empty($activityTaskDescIdResult)){
+                q("DELETE FROM activity_description WHERE ID = '" . $_POST["taskDescId"] . "'");
+                exit("success");
+            }else {
+                exit("notEmpty");
+            }
+
 
         }
     }
 
     function AJAX_addNewEmployee() {
         if(isset($_POST["firstName"]) && isset($_POST["lastName"])) {
-
             Admin_Model::addNewEmployee($_POST["firstName"],$_POST["lastName"]);
             exit("success");
-
         }
     }
 
     function AJAX_deleteEmployee() {
         if(isset($_POST["employeeId"])){
-            q("DELETE FROM employee WHERE ID = '" . $_POST["employeeId"] . "'");
 
-            exit("success");
+            $activityEmployeeId = $_POST["employeeId"];
 
+            $activityEmployeeIdResult = get_all("SELECT * FROM supervisor WHERE EMPLOYEE_ID = '{$activityEmployeeId}'");
+
+            if(empty($activityEmployeeIdResult)){
+                q("DELETE FROM employee WHERE ID = '" . $_POST["employeeId"] . "'");
+                exit("success");
+            }else {
+                exit("notEmpty");
+            }
         }
 
     }

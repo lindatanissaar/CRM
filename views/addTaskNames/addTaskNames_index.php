@@ -108,23 +108,56 @@
             taskDescId: taskDescId
         }).done(function (data) {
             if (data == "success") {
-                console.log("korras");
                 $('#deleteTaskNameSuccess').modal('show');
-                $('body').click(function(){
-                    location.reload();
-                })
+                location.reload();
 
 
-            } else {
-                console.log("pole korras");
-                $('body').click(function(){
-                    location.reload();
-                })
+            } else if (data == "notEmpty") {
+                $('#deleteTaskNameerrorNotEmpty').modal('show');
+
             }
         });
     });
 
 </script>
+
+
+<!-- MODALS -->
+
+<!-- deleteTaskNameerrorNotEmpty -->
+
+
+<div id="deleteTaskNameerrorNotEmpty" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA tegevuse nime kustutamisel</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tegevuse nime ei saa kustutada. Tegevuse nimi on seotud tegevusega.</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- deleteTaskNameSuccess  -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteTaskNameSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body modal-body-delete-success">
+                <h3>Kustutatud</h3>
+                <h4>Tegevuse nimi on kustutatud.</h4>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

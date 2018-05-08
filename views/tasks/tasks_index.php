@@ -187,8 +187,8 @@
                         "<?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?>"
                         contenteditable><?= $activity['FIRST_NAME'] . " " . $activity['LAST_NAME'] ?></td>
                         <td class="taskTransactionName" contenteditable><?= $activity['NAME'] ?></td>
-                        <td class="date"
-                            contenteditable><?= date("d/m/Y", strtotime($activity['DEADLINE_DATE'])) ?></td>
+                        <td class="date" id="datepicker2"
+                            contenteditable> <?= date("d/m/Y", strtotime($activity['DEADLINE_DATE'])) ?></td>
                         <td class="editAndDeleteTable">
                             <a title="Kogu tegevuse kustutamine" class="deleteTableRow"><img
                                         src="assets/img/icon-delete.png"/></a>
@@ -246,7 +246,7 @@
                                         <hr/>
 
                                         <div class="form-group">
-                                            <input title="Vali 'Võidetud' tehingute seast" type="text"
+                                            <input title="Vali võidetud ja lõpetamata tehingute seast" type="text"
                                                    class="form-control" placeholder="Seosta tehinguga"
                                                    id="transactionNameId" list="taskTransactionNameDatalist">
                                             <datalist id="taskTransactionNameDatalist">
@@ -290,6 +290,16 @@
 </div>
 
 <script>
+    var picker = new Pikaday(
+        {
+            field: document.getElementById('datepicker'),
+            firstDay: 1,
+            minDate: new Date(),
+            maxDate: new Date(2020, 12, 31),
+            yearRange: [2000, 2050],
+            format: 'DD/MM/YYYY'
+        });
+
     var picker2 = new Pikaday(
         {
             field: document.getElementById('datepicker2'),
@@ -363,30 +373,10 @@
 
 
             } else {
-                console.log("pole korras");
-
-
+                $('#addTaskError').modal('show');
             }
         });
     })
-
-</script>
-
-
-<!-- picker -->
-
-
-<script>
-
-    var picker = new Pikaday(
-        {
-            field: document.getElementById('datepicker'),
-            firstDay: 1,
-            minDate: new Date(),
-            maxDate: new Date(2020, 12, 31),
-            yearRange: [2000, 2050],
-            format: 'DD/MM/YYYY'
-        });
 
 </script>
 
@@ -397,12 +387,8 @@
 
     function applyDateRange() {
 
-        var dateStartDate = $('#daterangepicker').data('daterangepicker').startDate;
-        var dateEndDate = $('#daterangepicker').data('daterangepicker').endDate;
-
         var startDate = $('#daterangepicker').data('daterangepicker').startDate._d;
         var endDate = $('#daterangepicker').data('daterangepicker').endDate._d;
-
 
         var dateFormatStart = GetDateFormat(startDate);
         var dateFormatEnd = GetDateFormat(endDate);
@@ -410,41 +396,21 @@
         dateStartDate = formatStringToDate(dateFormatStart);
         dateEndDate = formatStringToDate(dateFormatEnd);
 
-        var count;
+        dateStart = getDateFormatMysql(dateStartDate);
+        dateEnd = getDateFormatMysql(dateEndDate);
 
-
-        $(".tasksTableBody").find("tr").each(function () { //get all rows in table
-
-            var dateValue = $(this).find('.date').text();
-
-            dateValue = formatStringToDate(dateValue);
-            console.log(dateStartDate);
-            console.log(dateEndDate);
-            console.log(dateValue);
-
-            if (dateValue >= dateStartDate && dateValue <= dateEndDate) {
-                $(this).removeClass("displayNone");
+        $.post("tasks/changeTable", {
+            dateStart: dateStart,
+            dateEnd: dateEnd
+        }).done(function (data) {
+            if (data == "success") {
+                console.log("korras");
+                location.reload();
 
             } else {
-                $(this).addClass("displayNone");
+                console.log("pole korras");
             }
-
-
-            if (!$(this).hasClass("displayNone")) {
-                count++;
-            }
-
-        })
-
-        if (count != 0) {
-
-            $("#filterTableNoResults").show("slide", {direction: "right"}, 1000);
-
-            $("#filterTableNoResults").delay(1000);
-
-            $("#filterTableNoResults").hide("slide", {direction: "right"}, 1000);
-
-        }
+        });
     }
 
     function GetDateFormat(date) {
@@ -455,6 +421,14 @@
         return day + '/' + month + '/' + date.getFullYear();
     }
 
+    function getDateFormatMysql(date){
+        var month = (date.getMonth() + 1).toString();
+        month = month.length > 1 ? month : '0' + month;
+        var day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+        return date.getFullYear() + '-' + month + '-' + day;
+    }
+
     function formatStringToDate(dateString) {
 
         var dateParts = dateString.split("/");
@@ -462,28 +436,40 @@
         var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // month is 0-based
 
         return dateObject;
-
     }
 
+    function formatDate (input) {
+        var datePart = input.match(/\d+/g),
+            year = datePart[0].substring(2), // get only two digits
+            month = datePart[1], day = datePart[2];
 
+        return day+'/'+month+'/'+year;
+    }
 </script>
 
 <script>
-
     $(function () {
-
-        var start;
-        var end;
-        start = moment().subtract(29, 'days');
-        end = moment();
-        function cb(start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        if(Cookies.get("dateStartTasks") == undefined || Cookies.get("dateEndTasks")== undefined){
+            start = moment().subtract(46, 'days');
+            end = moment().add(46, 'days');
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+        }else {
+            start = Cookies.get("dateStartTasks");
+            end = Cookies.get("dateEndTasks");
+            console.log(start);
+            console.log(end);
+            start = formatDate(start);
+            end = formatDate(end);
+            function cb(start, end) {
+                $('#reportrange span').html(start + ' - ' + end);
+            }
         }
 
         $('#daterangepicker').daterangepicker({
             startDate: start,
             endDate: end,
-
             "locale": {
                 "format": "DD/MM/YYYY",
                 "separator": " - ",
@@ -517,13 +503,12 @@
                 ],
                 "firstDay": 1
             }
-
         }, cb);
 
         cb(start, end);
 
-
     })
+
 
 </script>
 
@@ -818,6 +803,19 @@
 </script>
 
 
+<!--  table calendar -->
+<script>
+
+    $(".date").click(function(){
+
+
+    })
+
+</script>
+
+
+
+
 <!-- edit table data -->
 
 <script>
@@ -871,16 +869,13 @@
                 if (data == "success") {
                     console.log("korras");
                     location.reload();
-                    $('#deleteTransactionSuccess').modal('show');
-                    $('body').click(function () {
+                    $('#updateTaskTableSuccess').modal('show');
                         location.reload();
-                    })
+                } else if (data =="empty") {
+                    $('#updateTaskTableErrorEmpty').modal('show');
 
-                } else {
-                    console.log("pole korras");
-                    $('body').click(function () {
-                        location.reload();
-                    })
+                }else {
+                    $('#updateTaskTableError').modal('show');
                 }
             });
         });
@@ -888,6 +883,88 @@
 
 
 </script>
+
+<!-- MODAL -->
+
+<!-- updateTaskTableSuccess -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="updateTaskTableSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body modal-body-success">
+                <h3>Uuendatud</h3>
+                <h4>Tegevuse edukalt uuendatud</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- updateTaskTableErrorEmpty -->
+
+<div id="updateTaskTableErrorEmpty" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Pane tähele</h4>
+            </div>
+            <div class="modal-body">
+                <p>Saad lisada ainult olemasolevaid väärtusi</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- updateTaskTableError -->
+
+<div id="deleteTransactionError" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA UUENDAMISEL</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tegevuse uuendamisel esines viga. Proovi uuesti uuendada</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- addTaskError -->
+
+
+<div id="addTaskError" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA tegevuse lisamisel</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tegevuse lisamisel esines viga. Saad lisada ainult olemasolevaid väärtusi.</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

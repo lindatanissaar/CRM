@@ -347,32 +347,6 @@
                 console.log("pole korras");
             }
         });
-
-
-
-
-        /*
-
-         var count;
-
-
-         $("#wonProjectsTableBody").find("tr").each(function () { //get all rows in table
-
-         var dateValue = $(this).find('.date').text();
-
-         dateValue = formatStringToDate(dateValue);
-
-         if (dateValue >= dateStartDate && dateValue <= dateEndDate) {
-         $(this).removeClass("displayNone");
-
-         }else{
-         $(this).addClass("displayNone");
-         }
-
-         if (!$(this).hasClass("displayNone")) {
-         count++;
-         }
-         }) */
     }
 
     function GetDateFormat(date) {
@@ -416,7 +390,6 @@
 
     $(function () {
         if(Cookies.get("dateStartLostProjects") == undefined || Cookies.get("dateEndLostProjects")== undefined){
-            console.log("siin");
             start = moment().subtract(46, 'days');
             end = moment().add(46, 'days');
             function cb(start, end) {

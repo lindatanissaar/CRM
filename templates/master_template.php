@@ -197,10 +197,34 @@
         }
 
 
-        #addTransactionSuccessBody {
-            color: white;
-            background-color: #5cb85c;
+        .modal-body-success {
+             color: white !important;
+             background-color: #38B87C;
+         }
+
+        .modal-body-success h4 {
+            color: white !important;
         }
+
+        .modal-body-error {
+            background-color: #f8d7da;
+            color: #c9302c !important;
+        }
+
+        .modal-body-error h4 {
+            color: #c9302c !important;
+        }
+
+        .modal-body-delete-success {
+            color: white !important;
+            background-color: #38B87C;
+        }
+
+        .modal-body-delete-success h4 {
+            color: white !important;
+        }
+
+
 
         select.input-sm {
             color: white;

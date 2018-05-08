@@ -73,6 +73,12 @@
         width: 15%;
     }
 
+    /*  Modal */
+
+    .modal-footer-white {
+        background-color: white;
+    }
+
 </style>
 
 
@@ -303,7 +309,6 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="saveAndAddNew" type="button" class="btn btn-basic">Salvesta ja lisa uus</button>
                             <button id="addTransaction" type="button" class="btn btn-success" data-dismiss="modal">
                                 Salvesta
                             </button>
@@ -375,65 +380,15 @@
         }).done(function (data) {
             // if response from users/addingAdmins is successful, write "Uus kasutaja on lisatud", otherwise alert error
             if (data == "success") {
-                location.reload();
-
                 $('#addTransactionSuccess').modal('show');
-
-
-            } else {
                 location.reload();
-
-                $('#addTransactionError').modal('show');
-
-            }
-        });
-    })
-
-
-    $("#saveAndAddNew").click(function () {
-        var name = $("#name").val();
-        var price = $("#price").val();
-        var organisation_name = $("#organisationNameId").val();
-        var contact_person_name = $("#contactPersonNameId").val();
-        var email = $("#email").val();
-        var deadline_date = picker.toString();
-        var status = $("#id_item-0-status").val();
-        var note = $("#note").val();
-        var telephone = $("#telephone").val();
-
-        // make $.post query
-        $.post("projects/addTransaction", {
-            name: name,
-            price: price,
-            organisation_name: organisation_name,
-            contact_person_name: contact_person_name,
-            email: email,
-            deadline_date: deadline_date,
-            status: status,
-            note: note,
-            telephone: telephone
-        }).done(function (data) {
-            // if response from users/addingAdmins is successful, write "Uus kasutaja on lisatud", otherwise alert error
-            if (data == "success") {
-                $('#addTransactionSuccess').modal('show');
-
-                $(':input').val('');
-
-                $('body').click(function () {
-                    location.reload();
-                })
-
 
             } else {
                 $('#addTransactionError').modal('show');
-                $(':input').val('');
-                $('body').click(function () {
-                    location.reload();
-                })
             }
+
         });
     })
-
 
 </script>
 
@@ -448,18 +403,13 @@
             transaction_id: transaction_id
         }).done(function (data) {
             if (data == "success") {
-                console.log("korras");
                 $('#deleteTransactionSuccess').modal('show');
-                $('body').click(function () {
-                    location.reload();
-                })
+                location.reload();
 
 
-            } else {
-                console.log("pole korras");
-                $('body').click(function () {
-                    location.reload();
-                })
+            } else if (data == "notEmpty") {
+                $('#deleteTransactionErrorNotEmpty').modal('show');
+
             }
         });
     });
@@ -499,34 +449,10 @@
 <script>
 
     $('select[id$=-status][id^=id_item-]').change(function () {
-        //var color = $(this).find('option:selected').val();
         $(this).removeClass('STATUS_UNKNOWN STATUS_WON STATUS_LOST').addClass($(this).find('option:selected').val());
     }).change();
 
 </script>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="addTransactionSuccess" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-body" id="addTransactionSuccessBody">
-                <h2>Salvestatud!</h2>
-                <h4>Sisestatud tehing on salvestatud.</h4>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="deleteTransactionSuccess" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-body" id="deleteTransactionSuccessBody">
-                <H2>Kustutatud!</H2>
-                <h4>Sisestatud tehing on salvestatud.</h4>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <script>
 
@@ -687,8 +613,6 @@
         if(lmt != undefined){
             $('#pglmtTransaction').attr('value', lmt);
         }
-
-
     });
 
     $("#pglmtTransaction").keyup(function () {
@@ -746,8 +670,6 @@
 
             } else {
                 $('.counter').text(jobCount + ' tulemust');
-
-
             }
 
             if ($("#searchTransactionInput").val() == "") {
@@ -757,7 +679,6 @@
                 var allResults = $('tbody tr').length;
 
                 $('.paginationResults').text(numOfVisibleRows + ' rida ' + allResults + "-st");
-
             }
 
             if (jobCount == '0') {
@@ -1016,20 +937,38 @@
         });
 
         $('#updateTransactionTable').click(function () {
-            activityDescription = JSON.stringify(activityDescription);
-            taskTransactionName = JSON.stringify(taskTransactionName);
-            employeeName = JSON.stringify(employeeName);
+
+            transactionName = JSON.stringify(transactionName);
+            price = JSON.stringify(price);
+            organisationName = JSON.stringify(organisationName);
+            email = JSON.stringify(email);
+            phone = JSON.stringify(phone);
             date = JSON.stringify(date);
+            status = JSON.stringify(status);
+            note = JSON.stringify(note);
+
+            console.log(transactionName);
+            console.log(price);
+            console.log(organisationName);
+            console.log(email);
+            console.log(phone);
+            console.log(date);
+            console.log(status);
+            console.log(note);
+
             // make $.post query
-            $.post("tasks/updateTaskTable", {
-                data: {activityDescription: activityDescription,
-                    taskTransactionName: taskTransactionName,
+            $.post("projects/updateTransactionTable", {
+                data: {transactionName: transactionName,
+                    price: price,
+                    organisationName: organisationName,
+                    email: email,
+                    phone: phone,
                     date: date,
-                    employeeName: employeeName
+                    status: status,
+                    note: note
                 }
             }).done(function (data) {
                 if (data == "success") {
-                    console.log("korras");
                     location.reload();
                     $('#deleteTransactionSuccess').modal('show');
                     $('body').click(function () {
@@ -1038,9 +977,7 @@
 
                 } else {
                     console.log("pole korras");
-                    $('body').click(function () {
-                        location.reload();
-                    })
+
                 }
             });
         });
@@ -1061,14 +998,156 @@
         }).done(function (data) {
             if (data == "success") {
                 location.reload();
-            } else {
-                console.log("mingi error");
+
+            } else if (data =="notWonTransaction") {
+                $("#getNotWonTransactionModal").modal("show");
+            }else if (data == "notEmpty"){
+                $("#markTransactionCompletedErrorNotEmpty").modal("show");
             }
         });
     });
 
-
 </script>
+
+<!-- MODALS -->
+
+<!-- added transaction success -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="addTransactionSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body modal-body-success">
+                <h3>Salvestatud</h3>
+                <h4>Sisestatud tehing on salvestatud.</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- added transaction error -->
+
+<div id="addTransactionError" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA SALVESTAMISEL</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tehingu salvestamisel esines viga. Proovi uuesti salvestada</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- deleted transaction success -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteTransactionSuccess" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body modal-body-delete-success">
+                <h3>Kustutatud</h3>
+                <h4>Tehing on kustutatud.</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--  deleted transaction error -->
+<div id="deleteTransactionError" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA KUSTUTAMISEL</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tehingu kustutamisel esines viga. Proovi uuesti kustutada</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- delete transaction error not empty -->
+
+<div id="deleteTransactionErrorNotEmpty" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA KUSTUTAMISEL</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tehingut ei saa kustutada. Tehing on seotud tegevusega.</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- getNotWonTransactionModal -->
+
+<div id="getNotWonTransactionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Pane tähele</h4>
+            </div>
+            <div class="modal-body">
+                <p>Saad valida "lõpetatuks" ainult "võidetud" tehinguid</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- markTransactionCompletedErrorNotEmpty -->
+
+
+<div id="markTransactionCompletedErrorNotEmpty" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">VIGA lõpetatuks märkimisel</h4>
+            </div>
+            <div class="modal-body">
+                <p>Tehingut ei saa määrata lõpetatuks. Tehing on seotud tegevusega.</p>
+            </div>
+            <div class="modal-footer modal-footer-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Sulge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

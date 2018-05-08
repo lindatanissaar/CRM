@@ -9,7 +9,7 @@ class projects extends Controller
         $this->projects = get_all("SELECT * FROM projects");
         $this->organisations = get_all("SELECT * FROM organisation");
         $this->contact_persons = get_all("SELECT * FROM contact_person");
-        $this->transactions = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID AND transaction.COMPLETED = 0");
+        $this->transactions = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID AND transaction.COMPLETED = 0 AND TRANSACTION.STATUS != 'STATUS_LOST'");
     }
 
     function view()
@@ -42,16 +42,24 @@ class projects extends Controller
 
     function AJAX_deleteTableRow(){
         if(isset($_POST["transaction_id"])){
-            q("DELETE FROM transaction WHERE ID = '" . $_POST["transaction_id"] . "'");
+            $transaction_id = $_POST["transaction_id"];
 
-            exit("success");
+           $activityTransactionId = get_all("SELECT * FROM activity WHERE TRANSACTION_ID = '{$transaction_id}'");
+
+
+            if(empty($activityTransactionId)){
+                q("DELETE FROM transaction WHERE ID = '" . $_POST["transaction_id"] . "'");
+                exit("success");
+            }
+
+
+            exit("notEmpty");
         }
     }
 
     function AJAX_editTableRow(){
         if(isset($_POST["transaction_id"])){
             $transaction_id = $_POST["transaction_id"];
-
             $transactions2 = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ID = '{$transaction_id}' AND transaction.ORGANISATION_ID = organisation.ID AND transaction.CONTACT_PERSON_ID = contact_person.ID");
             exit(json_encode($transactions2));
         }
@@ -60,11 +68,22 @@ class projects extends Controller
     function AJAX_markTransactionCompleted(){
         if(isset($_POST["completedTransactionId"])){
             $completedTransactionId = $_POST["completedTransactionId"];
-            q("UPDATE transaction SET COMPLETED = 1 WHERE ID = '{$completedTransactionId}'");
+            $status = get_all("SELECT STATUS FROM  transaction WHERE ID='{$completedTransactionId}'");
+            $activityTransactionId = get_all("SELECT * FROM activity WHERE TRANSACTION_ID = '{$completedTransactionId}'");
 
-            exit("success");
+            if(!empty($activityTransactionId)){
+                exit("notEmpty");
+            }
+
+            if($status[0]["STATUS"] == "STATUS_WON"){
+                q("UPDATE transaction SET COMPLETED = 1 WHERE ID = '{$completedTransactionId}'");
+
+                exit("success");
+            }else{
+                exit("notWonTransaction");
+            }
         }
-
     }
 }
+
 
