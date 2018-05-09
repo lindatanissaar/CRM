@@ -887,6 +887,16 @@
         var date = {};
         var status = {};
         var note = {};
+        var contactPersonName = {};
+
+
+        $('.contactPersonName').each(function () {
+            $(this).blur(function () {
+                contactPersonName[$(this).parent().attr("id")] = $(this).text();
+                $("#updateTransactionTable").addClass("opacitySaveButton");
+            })
+        })
+
         $('.transactionName').each(function () {
             $(this).blur(function () {
                 transactionName[$(this).parent().attr("id")] = $(this).text();
@@ -946,15 +956,7 @@
             date = JSON.stringify(date);
             status = JSON.stringify(status);
             note = JSON.stringify(note);
-
-            console.log(transactionName);
-            console.log(price);
-            console.log(organisationName);
-            console.log(email);
-            console.log(phone);
-            console.log(date);
-            console.log(status);
-            console.log(note);
+            contactPersonName = JSON.stringify(contactPersonName);
 
             // make $.post query
             $.post("projects/updateTransactionTable", {
@@ -965,15 +967,13 @@
                     phone: phone,
                     date: date,
                     status: status,
-                    note: note
+                    note: note,
+                    contactPersonName: contactPersonName
                 }
             }).done(function (data) {
                 if (data == "success") {
                     location.reload();
                     $('#deleteTransactionSuccess').modal('show');
-                    $('body').click(function () {
-                        location.reload();
-                    })
 
                 } else {
                     console.log("pole korras");

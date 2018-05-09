@@ -84,6 +84,100 @@ class projects extends Controller
             }
         }
     }
+
+    function AJAX_updateTransactionTable(){
+
+        if(isset($_POST['data']['transactionName'])) {
+            $transactionName = $_POST['data']['transactionName'];
+            $transactionName = json_decode($transactionName);
+            foreach ($transactionName as $key => $value) {
+                $value = ucfirst($value);
+                $transactionName = get_first("SELECT ID FROM transaction WHERE NAME = '{$value}'");
+                if(empty($transactionName)){
+                    exit("empty");
+                }
+
+                q("UPDATE transaction SET NAME = '{$value}' WHERE ID = '{$key}'");
+            }
+
+        }
+
+        if(isset($_POST['data']['price'])) {
+            $price = $_POST['data']['price'];
+            $price = json_decode($price);
+
+            foreach ($price as $key => $value) {
+                if($value == ""){
+                    exit("empty");
+                }
+                $value = str_replace("€","",$value);
+                q("UPDATE transaction SET PRICE = '{$value}' WHERE ID = '{$key}'");
+            }
+        }
+
+        if(isset($_POST['data']['note'])) {
+            $note = $_POST['data']['note'];
+            $note = json_decode($note);
+
+            foreach ($note as $key => $value) {
+                q("UPDATE transaction SET NOTE = '{$value}' WHERE ID = '{$key}'");
+            }
+
+        }
+
+        if(isset($_POST['data']['date'])) {
+            $date = $_POST['data']['date'];
+            $date = json_decode($date);
+            foreach ($date as $key => $value) {
+                if($value == ""){
+                    exit("empty");
+                }
+                $date = str_replace('/', '-', $value);
+                $date =  date('Y-m-d', strtotime($date));
+                q("UPDATE transaction SET DEADLINE_DATE = '{$date}' WHERE ID = '{$key}'");
+            }
+        }
+
+        if(isset($_POST['data']['organisationName'])) {
+            $organisationName = $_POST['data']['organisationName'];
+            $organisationName = json_decode($organisationName);
+            foreach ($organisationName as $key => $value) {
+
+                $organisationName = ucfirst($value);
+                $organisationId = get_first("SELECT ID FROM organisation WHERE ORGANISATION_NAME = '{$organisationName}'");
+                if(empty($organisationId)){
+                    exit("empty");
+                }
+                $organisationId  = json_encode($organisationId);
+                $json = json_decode($organisationId, true);
+                $organisationId = $json['ID'];
+
+                q("UPDATE transaction SET ORGANISATION_ID = '{$organisationId}' WHERE ID = '{$key}'");
+            }
+        }
+
+        if(isset($_POST['data']['contactPersonName'])) {
+            $contactPersonName = $_POST['data']['contactPersonName'];
+            $contactPersonName = json_decode($contactPersonName);
+            foreach ($contactPersonName as $key => $value) {
+
+                $value = ucfirst($value);
+                $organisationId = get_first("SELECT ORGANISATION_ID FROM transaction WHERE ID = '{$key}'");
+                $contactPerson = get_first("SELECT CONTACT_PERSON_NAME FROM contact_person WHERE ORGANISATION_ID = '{$organisationId}' AND CONTACT_PERSON_NAME = '{$value}'");
+
+                if(empty($contactPerson)){
+                    exit("empty");
+                }
+               /* $employee_id  = json_encode($employee_id);
+                $json = json_decode($employee_id, true);
+                $employee_id = $json['ID'];*/
+
+                q("UPDATE contact_person SET CONTACT_PERSON_NAME = '{$contactPerson}' WHERE ORGANISATION_ID = '{$key}'");
+            }
+
+            exit("success");
+        }
+    }
 }
 
 

@@ -23,9 +23,12 @@ class Transaction
         $note = htmlspecialchars($note);
         $telephone = htmlspecialchars($telephone);
 
-        insert('organisation', [
-            'ORGANISATION_NAME' => $organisation_name
-        ]);
+        $organisation_id = get_first("SELECT ID FROM organisation WHERE ORGANISATION_NAME = '{$organisation_name}'");
+        if(empty($organisation_id)){
+            insert('organisation', [
+                'ORGANISATION_NAME' => $organisation_name
+            ]);
+        }
 
         $organisation_id = get_first("SELECT ID FROM organisation WHERE ORGANISATION_NAME = '{$organisation_name}'");
 
@@ -33,12 +36,16 @@ class Transaction
         $json = json_decode($organisation_id, true);
         $organisation_id = $json['ID'];
 
-        insert('contact_person', [
-            'ORGANISATION_ID' => $organisation_id,
-            'CONTACT_PERSON_NAME' => $contact_person_name,
-            'EMAIL' => $email,
-            'PHONE' => $telephone
-        ]);
+        $contact_person_id = get_first("SELECT ID FROM contact_person WHERE CONTACT_PERSON_NAME = '{$contact_person_name}'");
+
+        if(empty($contact_person_id)){
+            insert('contact_person', [
+                'ORGANISATION_ID' => $organisation_id,
+                'CONTACT_PERSON_NAME' => $contact_person_name,
+                'EMAIL' => $email,
+                'PHONE' => $telephone
+            ]);
+        }
 
         $contact_person_id = get_first("SELECT ID FROM contact_person WHERE CONTACT_PERSON_NAME = '{$contact_person_name}'");
 
