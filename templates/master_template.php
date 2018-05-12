@@ -73,7 +73,7 @@
             margin-left: 10px;
         }
 
-        #updateTaskTable, #updateTransactionTable {
+        #updateTaskTable, #updateTransactionTable, #updateShowProjectsTable {
             opacity: 0.5;
         }
 
@@ -420,12 +420,12 @@
         }
 
 
-        .transactionCompletedIcon {
+        .transactionCompletedIcon, .transactionRestoreIcon, .transactionNotCompleted {
             -webkit-filter: grayscale(100%);
             opacity: 0.2;
         }
 
-        .transactionCompletedIcon:hover {
+        .transactionCompletedIcon:hover, .transactionRestoreIcon:hover, .transactionNotCompleted:hover {
             -webkit-filter: grayscale(0%);
             opacity: 1;
 

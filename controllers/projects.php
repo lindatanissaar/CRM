@@ -9,7 +9,7 @@ class projects extends Controller
         $this->projects = get_all("SELECT * FROM projects");
         $this->organisations = get_all("SELECT * FROM organisation");
         $this->contact_persons = get_all("SELECT * FROM contact_person");
-        $this->transactions = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID AND transaction.COMPLETED = 0 AND TRANSACTION.STATUS != 'STATUS_LOST'");
+        $this->transactions = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ORGANISATION_ID = organisation.ID AND TRANSACTION.CONTACT_PERSON_ID = CONTACT_PERSON.ID AND transaction.COMPLETED = 0 AND TRANSACTION.STATUS != 'STATUS_LOST' AND TRANSACTION.DEL_DATETIME_TRANSACTION IS NULL");
     }
 
     function view()
@@ -48,10 +48,9 @@ class projects extends Controller
 
 
             if(empty($activityTransactionId)){
-                q("DELETE FROM transaction WHERE ID = '" . $_POST["transaction_id"] . "'");
+                q("UPDATE transaction SET DEL_DATETIME_TRANSACTION = NOW() WHERE ID = '" . $_POST["transaction_id"] . "'");
                 exit("success");
             }
-
 
             exit("notEmpty");
         }
@@ -60,12 +59,33 @@ class projects extends Controller
     function AJAX_editTableRow(){
         if(isset($_POST["transaction_id"])){
             $transaction_id = $_POST["transaction_id"];
-            $transactions2 = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ID = '{$transaction_id}' AND transaction.ORGANISATION_ID = organisation.ID AND transaction.CONTACT_PERSON_ID = contact_person.ID");
+            $transactions2 = get_all("SELECT * FROM organisation, contact_person, transaction WHERE transaction.ID = '{$transaction_id}' AND transaction.ORGANISATION_ID = organisation.ID AND transaction.CONTACT_PERSON_ID = contact_person.ID AND TRANSACTION.DEL_DATETIME_TRANSACTION IS NULL");
             exit(json_encode($transactions2));
         }
     }
 
     function AJAX_markTransactionCompleted(){
+        if(isset($_POST["completedTransactionId"])){
+            $completedTransactionId = $_POST["completedTransactionId"];
+            $status = get_all("SELECT STATUS FROM  transaction WHERE ID='{$completedTransactionId}'");
+            $activityTransactionId = get_all("SELECT * FROM activity WHERE TRANSACTION_ID = '{$completedTransactionId}'");
+
+            if(!empty($activityTransactionId)){
+                exit("notEmpty");
+            }
+
+            if($status[0]["STATUS"] == "STATUS_WON"){
+                q("UPDATE transaction SET COMPLETED = 1 WHERE ID = '{$completedTransactionId}'");
+
+                exit("success");
+            }else{
+                exit("notWonTransaction");
+            }
+        }
+    }
+
+
+    function AJAX_markTransactionNotCompleted(){
         if(isset($_POST["completedTransactionId"])){
             $completedTransactionId = $_POST["completedTransactionId"];
             $status = get_all("SELECT STATUS FROM  transaction WHERE ID='{$completedTransactionId}'");
@@ -92,14 +112,12 @@ class projects extends Controller
             $transactionName = json_decode($transactionName);
             foreach ($transactionName as $key => $value) {
                 $value = ucfirst($value);
-                $transactionName = get_first("SELECT ID FROM transaction WHERE NAME = '{$value}'");
-                if(empty($transactionName)){
+                if($value== ""){
                     exit("empty");
                 }
 
                 q("UPDATE transaction SET NAME = '{$value}' WHERE ID = '{$key}'");
             }
-
         }
 
         if(isset($_POST['data']['price'])) {
@@ -154,6 +172,7 @@ class projects extends Controller
 
                 q("UPDATE transaction SET ORGANISATION_ID = '{$organisationId}' WHERE ID = '{$key}'");
             }
+
         }
 
         if(isset($_POST['data']['contactPersonName'])) {
@@ -174,9 +193,9 @@ class projects extends Controller
 
                 q("UPDATE contact_person SET CONTACT_PERSON_NAME = '{$contactPerson}' WHERE ORGANISATION_ID = '{$key}'");
             }
-
-            exit("success");
         }
+
+        exit("success");
     }
 }
 

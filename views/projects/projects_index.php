@@ -414,8 +414,6 @@
         });
     });
 
-
-
 </script>
 
 <script>
@@ -1061,6 +1059,7 @@
 
 
 <!--  deleted transaction error -->
+
 <div id="deleteTransactionError" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -1102,7 +1101,6 @@
 </div>
 
 
-
 <!-- getNotWonTransactionModal -->
 
 <div id="getNotWonTransactionModal" class="modal fade" role="dialog">
@@ -1128,7 +1126,6 @@
 
 <!-- markTransactionCompletedErrorNotEmpty -->
 
-
 <div id="markTransactionCompletedErrorNotEmpty" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -1147,6 +1144,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 
 

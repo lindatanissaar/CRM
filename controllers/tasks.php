@@ -11,15 +11,15 @@ class tasks extends Controller
         if(isset($_COOKIE["dateStartTasks"]) && isset($_COOKIE["dateEndTasks"])) {
             $dateStart = $_COOKIE["dateStartTasks"];
             $dateEnd = $_COOKIE["dateEndTasks"];
-            $this->transactions = get_all("SELECT * FROM transaction WHERE STATUS = 'STATUS_WON' AND COMPLETED = 0");
+            $this->transactions = get_all("SELECT * FROM transaction WHERE STATUS = 'STATUS_WON' AND COMPLETED = 0 AND TRANSACTION.DEL_DATETIME_TRANSACTION IS NULL");
             $this->employees = get_all("SELECT * FROM employee");
             $this->activity_descriptions = get_all("SELECT * FROM activity_description");
-            $this->activities = get_all("SELECT * FROM transaction, supervisor, employee, activity_description, activity WHERE activity.TRANSACTION_ID = transaction.ID AND activity.DESCRIPTION_ID = activity_description.ID AND supervisor.EMPLOYEE_ID = employee.ID AND supervisor.ACTIVITY_ID = activity.ID AND activity.DEL_DATETIME_ACTIVITY IS NULL  AND activity.DEADLINE_DATE >= '{$dateStart}' AND activity.DEADLINE_DATE <= '{$dateEnd}'");
+            $this->activities = get_all("SELECT * FROM transaction, supervisor, employee, activity_description, activity WHERE activity.TRANSACTION_ID = transaction.ID AND activity.DESCRIPTION_ID = activity_description.ID AND supervisor.EMPLOYEE_ID = employee.ID AND supervisor.ACTIVITY_ID = activity.ID AND activity.DEL_DATETIME_ACTIVITY IS NULL  AND activity.DEADLINE_DATE >= '{$dateStart}' AND activity.DEADLINE_DATE <= '{$dateEnd}' AND TRANSACTION.DEL_DATETIME_TRANSACTION IS NULL");
         } else {
-            $this->transactions = get_all("SELECT * FROM transaction WHERE STATUS = 'STATUS_WON' AND COMPLETED = 0");
+            $this->transactions = get_all("SELECT * FROM transaction WHERE STATUS = 'STATUS_WON' AND COMPLETED = 0 AND TRANSACTION.DEL_DATETIME_TRANSACTION IS NULL");
             $this->employees = get_all("SELECT * FROM employee");
             $this->activity_descriptions = get_all("SELECT * FROM activity_description");
-            $this->activities = get_all("SELECT * FROM transaction, supervisor, employee, activity_description, activity WHERE activity.TRANSACTION_ID = transaction.ID AND activity.DESCRIPTION_ID = activity_description.ID AND supervisor.EMPLOYEE_ID = employee.ID AND supervisor.ACTIVITY_ID = activity.ID AND activity.DEL_DATETIME_ACTIVITY IS NULL  AND activity.DEADLINE_DATE >= NOW() - INTERVAL 46 DAY AND activity.DEADLINE_DATE <= NOW() + INTERVAL 46 DAY");
+            $this->activities = get_all("SELECT * FROM transaction, supervisor, employee, activity_description, activity WHERE activity.TRANSACTION_ID = transaction.ID AND activity.DESCRIPTION_ID = activity_description.ID AND supervisor.EMPLOYEE_ID = employee.ID AND supervisor.ACTIVITY_ID = activity.ID AND activity.DEL_DATETIME_ACTIVITY IS NULL  AND activity.DEADLINE_DATE >= NOW() - INTERVAL 46 DAY AND activity.DEADLINE_DATE <= NOW() + INTERVAL 46 DAY AND TRANSACTION.DEL_DATETIME_TRANSACTION IS NULL");
         }
     }
 
